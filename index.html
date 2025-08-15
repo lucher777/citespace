@@ -18,32 +18,38 @@
             <p>教育技术学研究数据采集工具 - 全面版</p>
         </div>
         <div class="settings-bar">
-            <div style="display:flex; gap:10px; align-items:center;">
-                <label style="font-weight:600; color:#444;">提供商</label>
-                <select id="provider_select">
-                    <option value="doubao">豆包</option>
-                    <option value="deepseek">DeepSeek</option>
-                    <option value="openai">OpenAI</option>
-                </select>
+            <div class="settings-controls">
+                <div>
+                    <label>提供商</label>
+                    <select id="provider_select">
+                        <option value="doubao">豆包</option>
+                        <option value="deepseek">DeepSeek</option>
+                    </select>
+                </div>
+                <div>
+                    <label>模型</label>
+                    <select id="model_select">
+                        <!-- 动态加载模型列表 -->
+                    </select>
+                </div>
             </div>
-            <div style="display:flex; gap:10px; align-items:center;">
-                <label style="font-weight:600; color:#444;">模型</label>
-                <select id="model_select">
-                    <!-- 动态加载模型列表 -->
-                </select>
+            
+            <div class="settings-button-group">
+                <button class="btn btn-test" id="testApiConnectionBtn">
+                    🔗 测试连接
+                </button>
+                <button class="btn btn-save" id="saveApiSettingsBtn" onclick="saveApiSettings()">
+                    💾 保存设置
+                </button>
+                <button class="btn btn-clear" id="clearAllBtnTop">
+                    🗑️ 清空表单
+                </button>
             </div>
-            <button class="btn btn-secondary btn-sm" id="testApiConnectionBtn">测试连接</button>
-            <button class="btn btn-primary btn-sm" id="saveApiSettingsBtn" onclick="saveApiSettings()" style="margin-left: 10px;">
-                💾 保存设置
-            </button>
-            <button class="btn btn-sm" id="clearAllBtnTop" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #8b2635; margin-left: 10px;">
-                🗑️ 清空表单
-            </button>
-            <div style="margin-left:10px; font-size:12px; color:#666;">
-                API配置已移至config.js文件
-            </div>
-            <div id="currentModelStatus" style="margin-left:10px; font-size:12px; color:#28a745; font-weight:600;">
-                <!-- 当前模型状态将在这里显示 -->
+            
+            <div class="settings-status">
+                <div id="currentModelStatus" class="status-item" style="color: #28a745; font-weight: 600;">
+                    <!-- 当前模型状态将在这里显示 -->
+                </div>
             </div>
         </div>
         
@@ -885,7 +891,7 @@
                 <button class="btn btn-success" id="importDataBtn">
                     📥 导入数据
                 </button>
-                <button class="btn" id="clearAllBtn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #8b2635;">
+                <button class="btn btn-clear" id="clearAllBtn">
                     🗑️ 清空表单
                 </button>
             </div>

@@ -1292,3 +1292,227 @@ body.modal-open {
     font-size: 1.2em;
     font-weight: bold;
 }
+
+/* 设置栏按钮组样式 */
+.settings-bar {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    padding: 20px 25px;
+    border-bottom: 1px solid #e1e5e9;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.settings-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: auto;
+}
+
+.settings-controls > div {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.settings-controls label {
+    font-weight: 600;
+    color: #444;
+    font-size: 0.9em;
+    white-space: nowrap;
+}
+
+.settings-controls select {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 0.85em;
+    background: white;
+    min-width: 120px;
+    transition: all 0.3s ease;
+}
+
+.settings-controls select:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+/* 按钮组样式 */
+.settings-button-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid #e1e5e9;
+}
+
+.settings-button-group .btn {
+    padding: 8px 16px;
+    font-size: 0.85em;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 90px;
+    justify-content: center;
+}
+
+.settings-button-group .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.settings-button-group .btn:hover::before {
+    left: 100%;
+}
+
+/* 测试连接按钮 */
+.settings-button-group .btn-test {
+    background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+    color: white;
+    border: none;
+}
+
+.settings-button-group .btn-test:hover {
+    background: linear-gradient(135deg, #0984e3 0%, #74b9ff 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(9, 132, 227, 0.3);
+}
+
+/* 保存设置按钮 */
+.settings-button-group .btn-save {
+    background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+    color: white;
+    border: none;
+}
+
+.settings-button-group .btn-save:hover {
+    background: linear-gradient(135deg, #00a085 0%, #00b894 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3);
+}
+
+/* 清空表单按钮 */
+.settings-button-group .btn-clear {
+    background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+    color: white;
+    border: none;
+}
+
+.settings-button-group .btn-clear:hover {
+    background: linear-gradient(135deg, #e84393 0%, #fd79a8 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(232, 67, 147, 0.3);
+}
+
+/* 状态信息样式 */
+.settings-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8em;
+    color: #666;
+}
+
+.settings-status .status-item {
+    padding: 4px 8px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.7);
+    border: 1px solid #e1e5e9;
+}
+
+/* 底部操作按钮区域样式 */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-top: 1px solid #e1e5e9;
+    flex-wrap: wrap;
+}
+
+.action-buttons .btn {
+    padding: 12px 24px;
+    font-size: 0.95em;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 120px;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.action-buttons .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.action-buttons .btn:hover::before {
+    left: 100%;
+}
+
+.action-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .settings-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+    
+    .settings-controls {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+    
+    .settings-controls > div {
+        justify-content: space-between;
+    }
+    
+    .settings-button-group {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .settings-status {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .action-buttons .btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}

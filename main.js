@@ -67,6 +67,20 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('测试连接按钮未找到或testApiConnection函数不存在');
     }
     
+    // 绑定清空表单按钮事件
+    const clearAllBtnTop = document.getElementById('clearAllBtnTop');
+    const clearAllBtn = document.getElementById('clearAllBtn');
+    
+    if (clearAllBtnTop) {
+        clearAllBtnTop.addEventListener('click', clearAllFormData);
+        console.log('顶部清空表单按钮事件监听器已添加');
+    }
+    
+    if (clearAllBtn) {
+        clearAllBtn.addEventListener('click', clearAllFormData);
+        console.log('底部清空表单按钮事件监听器已添加');
+    }
+    
     // 绑定图文采集按钮事件
     const textCaptureBtns = document.querySelectorAll('.text-capture-btn');
     if (textCaptureBtns.length > 0) {
@@ -111,7 +125,33 @@ document.addEventListener('DOMContentLoaded', function() {
     document.head.appendChild(style);
 });
 
+// 清空所有表单数据
+function clearAllFormData() {
+    // 显示确认对话框
+    if (!confirm('确定要清空所有表单数据吗？此操作不可撤销。')) {
+        return;
+    }
+    
+    // 清空所有表单字段
+    document.querySelectorAll('input, select, textarea').forEach(field => {
+        if (field.type !== 'button' && field.type !== 'submit') {
+            field.value = '';
+        }
+    });
+    
+    // 清空自动保存数据
+    localStorage.removeItem('citespace_auto_save');
+    
+    // 显示成功提示
+    showToast('所有表单数据已清空', 'success');
+    
+    console.log('所有表单数据已清空');
+}
+
 // 页面卸载时清理
 window.addEventListener('beforeunload', function() {
     stopAutoSave();
 });
+
+// 导出清空表单函数
+window.clearAllFormData = clearAllFormData;

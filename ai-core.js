@@ -89,21 +89,6 @@ async function analyzeSectionInModal(textInput, imageFile, descriptor, targetSec
                     }
                 ]
             };
-        } else if (currentProvider === 'openai') {
-            // OpenAI格式：使用image_url格式
-            const base64Image = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onload = e => resolve(e.target.result.split(',')[1]);
-                reader.readAsDataURL(imageFile);
-            });
-            
-            imageContent = {
-                role: 'user',
-                content: [
-                    { type: 'text', text: textInput || '请分析这张图片中的数据，提取出表格、图表或文字中的相关信息' },
-                    { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Image}` } }
-                ]
-            };
         } else if (currentProvider === 'deepseek') {
             // DeepSeek格式：使用base64格式
             const base64Image = await new Promise((resolve) => {

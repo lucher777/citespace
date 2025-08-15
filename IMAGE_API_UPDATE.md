@@ -41,7 +41,7 @@
 ### 2. 按提供商区分的处理逻辑
 
 - **豆包 (doubao)**: 使用标准豆包视觉API格式，image_url在前，text在后
-- **OpenAI**: 保持原有OpenAI格式
+
 - **DeepSeek**: 使用兼容的base64格式
 
 
@@ -100,5 +100,5 @@ const payload = {
 ## 兼容性
 
 - 向后兼容：原有文本处理逻辑不变
-- 多提供商支持：保持对OpenAI、DeepSeek的支持
+- 多提供商支持：保持对DeepSeek的支持
 - 错误处理：完善的错误提示和回退机制
