@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CiteSpace数据采集系统</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- 自动隐藏提示窗口 -->
+    <div id="toastNotification" class="toast-notification">
+        <span class="toast-icon">✓</span>
+        <span class="toast-message">操作成功</span>
+    </div>
+    <div class="container">
+        <div class="header">
+            <h1>🔬 CiteSpace数据采集系统</h1>
+            <p>教育技术学研究数据采集工具 - 全面版</p>
+        </div>
+        <div class="settings-bar">
+            <div style="display:flex; gap:10px; align-items:center;">
+                <label style="font-weight:600; color:#444;">提供商</label>
+                <select id="provider_select">
+                    <option value="doubao">豆包</option>
+                    <option value="deepseek">DeepSeek</option>
+                    <option value="openai">OpenAI</option>
+                </select>
+            </div>
+            <div style="display:flex; gap:10px; align-items:center;">
+                <label style="font-weight:600; color:#444;">模型</label>
+                <select id="model_select">
+                    <!-- 动态加载模型列表 -->
+                </select>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="testApiConnectionBtn">测试连接</button>
+            <button class="btn btn-primary btn-sm" id="saveApiSettingsBtn" onclick="saveApiSettings()" style="margin-left: 10px;">
+                💾 保存设置
+            </button>
+            <button class="btn btn-sm" id="clearAllBtnTop" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #8b2635; margin-left: 10px;">
+                🗑️ 清空表单
+            </button>
+            <div style="margin-left:10px; font-size:12px; color:#666;">
+                API配置已移至config.js文件
+            </div>
+            <div id="currentModelStatus" style="margin-left:10px; font-size:12px; color:#28a745; font-weight:600;">
+                <!-- 当前模型状态将在这里显示 -->
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <!-- 数据检索基础信息 -->
+            <div class="section">
+                <h3><span class="section-icon">1</span>数据检索基础信息 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>数据库来源 (多个用逗号分隔)</label>
+                        <input type="text" id="database_source" data-field-id="database_source" placeholder="如：Web of Science, 中国知网, Scopus, 其他">
+                        <small style="color: #666; font-size: 12px;">请输入多个数据库来源，用逗号分隔</small>
+                    </div>
+                    <div class="form-group">
+                        <label>检索策略/关键词</label>
+                        <textarea data-field-id="search_strategy" placeholder="例如：以'CiteSpace'为检索词进行全文精确搜索，或选择'传统村落'、'传统聚落'、'古村落'、'历史村落'、'历史文化名村'为检索词，以'篇名'为检索途径"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>时间范围</label>
+                        <input type="text" data-field-id="time_range" placeholder="如：2010-2024">
+                    </div>
+                    <div class="form-group">
+                        <label>学科范围</label>
+                        <input type="text" data-field-id="subject_scope" placeholder="如：教育学、计算机科学、管理学">
+                    </div>
+                    <div class="form-group">
+                        <label>初检文献数</label>
+                        <input type="number" data-field-id="initial_papers" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>最终有效文献数</label>
+                        <input type="number" data-field-id="final_papers" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>文献类型限制</label>
+                        <input type="text" data-field-id="document_type_limit" placeholder="如：Article, Review">
+                    </div>
+                    <div class="form-group">
+                        <label>语言限制</label>
+                        <input type="text" data-field-id="language_limit" placeholder="如：English">
+                    </div>
+                    <div class="form-group">
+                        <label>CiteSpace版本</label>
+                        <input type="text" data-field-id="citespace_version" placeholder="如：6.2.R4">
+                    </div>
+                    <div class="form-group">
+                        <label>时间切片</label>
+                        <input type="number" data-field-id="time_slice" placeholder="1">
+                    </div>
+                    <div class="form-group">
+                        <label>节点阈值</label>
+                        <input type="text" data-field-id="node_threshold" placeholder="如：2,2,20">
+                    </div>
+                    <div class="form-group">
+                        <label>网络剪枝方法 (多个用逗号分隔)</label>
+                        <input type="text" data-field-id="pruning_method" placeholder="如：Pathfinder, MST, Pruning sliced networks">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 年发文量趋势分析 -->
+            <div class="section">
+                <h3><span class="section-icon">2</span>年发文量趋势分析 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>起步期时间段</label>
+                        <input type="text" data-field-id="startup_period" placeholder="如：2010-2015">
+                    </div>
+                    <div class="form-group">
+                        <label>起步期年均发文量</label>
+                        <input type="number" data-field-id="startup_papers" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>成长期时间段</label>
+                        <input type="text" data-field-id="growth_period" placeholder="如：2016-2020">
+                    </div>
+                    <div class="form-group">
+                        <label>成长期年均发文量</label>
+                        <input type="number" data-field-id="growth_papers" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>爆发期时间段</label>
+                        <input type="text" data-field-id="burst_period" placeholder="如：2021-2024">
+                    </div>
+                    <div class="form-group">
+                        <label>爆发期年均发文量</label>
+                        <input type="number" data-field-id="burst_papers" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>成熟期时间段</label>
+                        <input type="text" data-field-id="maturity_period" placeholder="如：2023-2024">
+                    </div>
+                    <div class="form-group">
+                        <label>成熟期年均发文量</label>
+                        <input type="number" data-field-id="maturity_papers" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>峰值年份</label>
+                        <input type="number" data-field-id="peak_year" placeholder="2024">
+                    </div>
+                    <div class="form-group">
+                        <label>峰值发文量</label>
+                        <input type="number" data-field-id="peak_papers" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>最低谷年份</label>
+                        <input type="number" data-field-id="trough_year" placeholder="2010">
+                    </div>
+                    <div class="form-group">
+                        <label>最低谷发文量</label>
+                        <input type="number" data-field-id="trough_papers" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>总体增长率(%)</label>
+                        <input type="number" step="0.01" data-field-id="overall_growth_rate" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>近5年增长率(%)</label>
+                        <input type="number" step="0.01" data-field-id="recent_5yr_growth_rate" placeholder="0.00">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 国家/地区分布 -->
+            <div class="section">
+                <h3><span class="section-icon">3</span>国家/地区分布 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="stats-row">
+                    <div class="stats-item">
+                        <div class="stats-label">参与国家/地区总数</div>
+                        <input type="number" class="stats-input" data-field-id="total_countries" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">国际合作文献数</div>
+                        <input type="number" class="stats-input" data-field-id="international_collaboration_papers" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">国际合作占比(%)</div>
+                        <input type="number" step="0.01" class="stats-input" data-field-id="international_collaboration_ratio" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="ranking-group">
+                    <div class="ranking-title">🌍 国家/地区排名</div>
+                    <div class="ranking-item" style="font-weight: bold; background: #f8f9fa;">
+                        <div>排名</div>
+                        <div>国家名称</div>
+                        <div>发文量</div>
+                        <div>占比(%)</div>
+                        <div>中心性</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">1</div>
+                        <input type="text" placeholder="国家名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">2</div>
+                        <input type="text" placeholder="国家名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">3</div>
+                        <input type="text" placeholder="国家名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">4</div>
+                        <input type="text" placeholder="国家名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">5</div>
+                        <input type="text" placeholder="国家名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 期刊分布 -->
+            <div class="section">
+                <h3><span class="section-icon">4</span>期刊分布 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="stats-row">
+                    <div class="stats-item">
+                        <div class="stats-label">期刊总数</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">核心期刊数量</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">Q1期刊发文量</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">高影响因子期刊数量(IF>5)</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                </div>
+                <div class="ranking-group">
+                    <div class="ranking-title">📚 期刊排名</div>
+                    <div class="ranking-item" style="font-weight: bold; background: #f8f9fa;">
+                        <div>排名</div>
+                        <div>期刊名称</div>
+                        <div>发文量</div>
+                        <div>占比(%)</div>
+                        <div>影响因子</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">1</div>
+                        <input type="text" placeholder="期刊名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">2</div>
+                        <input type="text" placeholder="期刊名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">3</div>
+                        <input type="text" placeholder="期刊名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">4</div>
+                        <input type="text" placeholder="期刊名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">5</div>
+                        <input type="text" placeholder="期刊名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 机构分布 -->
+            <div class="section">
+                <h3><span class="section-icon">5</span>机构分布 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="stats-row">
+                    <div class="stats-item">
+                        <div class="stats-label">机构总数</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">高产机构数量(≥10篇)</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">机构合作文献数</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">机构合作占比(%)</div>
+                        <input type="number" step="0.01" class="stats-input" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="ranking-group">
+                    <div class="ranking-title">🏛️ 机构排名</div>
+                    <div class="ranking-item" style="font-weight: bold; background: #f8f9fa;">
+                        <div>排名</div>
+                        <div>机构名称</div>
+                        <div>发文量</div>
+                        <div>占比(%)</div>
+                        <div>中心性</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">1</div>
+                        <input type="text" placeholder="机构名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">2</div>
+                        <input type="text" placeholder="机构名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">3</div>
+                        <input type="text" placeholder="机构名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">4</div>
+                        <input type="text" placeholder="机构名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">5</div>
+                        <input type="text" placeholder="机构名称">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 作者分析 -->
+            <div class="section">
+                <h3><span class="section-icon">6</span>作者分析 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="stats-row">
+                    <div class="stats-item">
+                        <div class="stats-label">作者总数</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">高产作者数量(≥5篇)</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">作者合作文献数</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">作者合作占比(%)</div>
+                        <input type="number" step="0.01" class="stats-input" placeholder="0.00">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">平均合作度</div>
+                        <input type="number" step="0.01" class="stats-input" placeholder="0.00">
+                    </div>
+                </div>
+                <div class="ranking-group">
+                    <div class="ranking-title">👨‍🎓 作者排名</div>
+                    <div class="ranking-item" style="font-weight: bold; background: #f8f9fa;">
+                        <div>排名</div>
+                        <div>作者姓名</div>
+                        <div>发文量</div>
+                        <div>机构</div>
+                        <div>中心性</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">1</div>
+                        <input type="text" placeholder="作者姓名">
+                        <input type="number" placeholder="0">
+                        <input type="text" placeholder="所属机构">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">2</div>
+                        <input type="text" placeholder="作者姓名">
+                        <input type="number" placeholder="0">
+                        <input type="text" placeholder="所属机构">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">3</div>
+                        <input type="text" placeholder="作者姓名">
+                        <input type="number" placeholder="0">
+                        <input type="text" placeholder="所属机构">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">4</div>
+                        <input type="text" placeholder="作者姓名">
+                        <input type="number" placeholder="0">
+                        <input type="text" placeholder="所属机构">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">5</div>
+                        <input type="text" placeholder="作者姓名">
+                        <input type="number" placeholder="0">
+                        <input type="text" placeholder="所属机构">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 突现词分析 -->
+            <div class="section">
+                <h3><span class="section-icon">7</span>突现词分析 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="stats-row">
+                    <div class="stats-item">
+                        <div class="stats-label">突现词总数</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">当前突现词数量</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                </div>
+                <div class="ranking-group">
+                    <div class="ranking-title">💥 突现词排名</div>
+                    <div class="ranking-item" style="font-weight: bold; background: #f8f9fa;">
+                        <div>排名</div>
+                        <div>词汇</div>
+                        <div>突现强度</div>
+                        <div>开始时间</div>
+                        <div>持续年数</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">1</div>
+                        <input type="text" placeholder="突现词">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" placeholder="2020">
+                        <input type="number" placeholder="3">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">2</div>
+                        <input type="text" placeholder="突现词">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" placeholder="2020">
+                        <input type="number" placeholder="3">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">3</div>
+                        <input type="text" placeholder="突现词">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" placeholder="2020">
+                        <input type="number" placeholder="3">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">4</div>
+                        <input type="text" placeholder="突现词">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" placeholder="2020">
+                        <input type="number" placeholder="3">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">5</div>
+                        <input type="text" placeholder="突现词">
+                        <input type="number" step="0.01" placeholder="0.00">
+                        <input type="number" placeholder="2020">
+                        <input type="number" placeholder="3">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 聚类分析 -->
+            <div class="section">
+                <h3><span class="section-icon">8</span>聚类分析 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="stats-row">
+                    <div class="stats-item">
+                        <div class="stats-label">聚类总数</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">有效聚类数量</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">平均Silhouette值</div>
+                        <input type="number" step="0.001" class="stats-input" placeholder="0.000">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">模块度Q值</div>
+                        <input type="number" step="0.001" class="stats-input" placeholder="0.000">
+                    </div>
+                </div>
+                <div class="cluster-grid">
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #0</div>
+                        <input type="text" class="cluster-input" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" placeholder="文献数">
+                        <textarea class="cluster-input" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #1</div>
+                        <input type="text" class="cluster-input" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" placeholder="文献数">
+                        <textarea class="cluster-input" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #2</div>
+                        <input type="text" class="cluster-input" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" placeholder="文献数">
+                        <textarea class="cluster-input" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #3</div>
+                        <input type="text" class="cluster-input" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" placeholder="文献数">
+                        <textarea class="cluster-input" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #4</div>
+                        <input type="text" class="cluster-input" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" placeholder="文献数">
+                        <textarea class="cluster-input" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #5</div>
+                        <input type="text" class="cluster-input" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" placeholder="文献数">
+                        <textarea class="cluster-input" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 关键词分析 -->
+            <div class="section">
+                <h3><span class="section-icon">9</span>关键词分析 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="stats-row">
+                    <div class="stats-item">
+                        <div class="stats-label">关键词总数</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                    <div class="stats-item">
+                        <div class="stats-label">高频关键词数量(≥10次)</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                </div>
+                <div class="ranking-group">
+                    <div class="ranking-title">🔑 关键词排名</div>
+                    <div class="ranking-item" style="font-weight: bold; background: #f8f9fa;">
+                        <div>排名</div>
+                        <div>词汇</div>
+                        <div>频次</div>
+                        <div>中心性</div>
+                        <div>首现年份</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">1</div>
+                        <input type="text" placeholder="关键词">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.001" placeholder="0.000">
+                        <input type="number" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">2</div>
+                        <input type="text" placeholder="关键词">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.001" placeholder="0.000">
+                        <input type="number" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">3</div>
+                        <input type="text" placeholder="关键词">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.001" placeholder="0.000">
+                        <input type="number" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">4</div>
+                        <input type="text" placeholder="关键词">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.001" placeholder="0.000">
+                        <input type="number" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">5</div>
+                        <input type="text" placeholder="关键词">
+                        <input type="number" placeholder="0">
+                        <input type="number" step="0.001" placeholder="0.000">
+                        <input type="number" placeholder="2010">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 时间演化分析 -->
+            <div class="section">
+                <h3><span class="section-icon">10</span>时间演化分析 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="stats-row">
+                    <div class="stats-item">
+                        <div class="stats-label">演化阶段总数</div>
+                        <input type="number" class="stats-input" placeholder="4">
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-label">🕐 阶段1</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>时间段</label>
+                            <input type="text" placeholder="如：2010-2015">
+                        </div>
+                        <div class="form-group">
+                            <label>主要热点词</label>
+                            <textarea placeholder="用逗号分隔多个热点词" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>代表性文献数</label>
+                            <input type="number" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-label">🕑 阶段2</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>时间段</label>
+                            <input type="text" placeholder="如：2016-2018">
+                        </div>
+                        <div class="form-group">
+                            <label>主要热点词</label>
+                            <textarea placeholder="用逗号分隔多个热点词" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>代表性文献数</label>
+                            <input type="number" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-label">🕒 阶段3</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>时间段</label>
+                            <input type="text" placeholder="如：2019-2021">
+                        </div>
+                        <div class="form-group">
+                            <label>主要热点词</label>
+                            <textarea placeholder="用逗号分隔多个热点词" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>代表性文献数</label>
+                            <input type="number" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-label">🕓 阶段4</div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>时间段</label>
+                            <input type="text" placeholder="如：2022-2024">
+                        </div>
+                        <div class="form-group">
+                            <label>主要热点词</label>
+                            <textarea placeholder="用逗号分隔多个热点词" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>代表性文献数</label>
+                            <input type="number" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 核心引文 -->
+            <div class="section">
+                <h3><span class="section-icon">11</span>核心引文 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="stats-row">
+                    <div class="stats-item">
+                        <div class="stats-label">高被引文献总数(≥10次)</div>
+                        <input type="number" class="stats-input" placeholder="0">
+                    </div>
+                </div>
+                <div class="ranking-group">
+                    <div class="ranking-title">📖 高被引文献</div>
+                    <div class="ranking-item" style="font-weight: bold; background: #f8f9fa;">
+                        <div>排名</div>
+                        <div>作者及年份</div>
+                        <div>被引频次</div>
+                        <div>期刊名称</div>
+                        <div>中心性</div>
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">1</div>
+                        <input type="text" placeholder="作者, 年份">
+                        <input type="number" placeholder="0">
+                        <input type="text" placeholder="期刊名称">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">2</div>
+                        <input type="text" placeholder="作者, 年份">
+                        <input type="number" placeholder="0">
+                        <input type="text" placeholder="期刊名称">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">3</div>
+                        <input type="text" placeholder="作者, 年份">
+                        <input type="number" placeholder="0">
+                        <input type="text" placeholder="期刊名称">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">4</div>
+                        <input type="text" placeholder="作者, 年份">
+                        <input type="number" placeholder="0">
+                        <input type="text" placeholder="期刊名称">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">5</div>
+                        <input type="text" placeholder="作者, 年份">
+                        <input type="number" placeholder="0">
+                        <input type="text" placeholder="期刊名称">
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 网络拓扑特征 -->
+            <div class="section">
+                <h3><span class="section-icon">12</span>网络拓扑特征 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>整体网络密度</label>
+                        <input type="number" step="0.0001" placeholder="0.0000">
+                    </div>
+                    <div class="form-group">
+                        <label>作者合作网络密度</label>
+                        <input type="number" step="0.0001" placeholder="0.0000">
+                    </div>
+                    <div class="form-group">
+                        <label>关键词共现网络密度</label>
+                        <input type="number" step="0.0001" placeholder="0.0000">
+                    </div>
+                    <div class="form-group">
+                        <label>机构合作网络密度</label>
+                        <input type="number" step="0.0001" placeholder="0.0000">
+                    </div>
+                    <div class="form-group">
+                        <label>最高中心性节点</label>
+                        <input type="text" placeholder="节点名称">
+                    </div>
+                    <div class="form-group">
+                        <label>高中心性节点数量</label>
+                        <input type="number" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>网络连通组件数</label>
+                        <input type="number" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>最大连通组件规模</label>
+                        <input type="number" placeholder="0">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 引用模式分析 -->
+            <div class="section">
+                <h3><span class="section-icon">13</span>引用模式分析 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>总引用次数</label>
+                        <input type="number" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>平均被引频次</label>
+                        <input type="number" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>自引文献数</label>
+                        <input type="number" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>自引率(%)</label>
+                        <input type="number" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>h指数</label>
+                        <input type="number" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>g指数</label>
+                        <input type="number" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>引用半衰期(年)</label>
+                        <input type="number" step="0.1" placeholder="0.0">
+                    </div>
+                    <div class="form-group">
+                        <label>Price指数</label>
+                        <input type="number" step="0.01" placeholder="0.00">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 数据质量与可靠性 -->
+            <div class="section">
+                <h3><span class="section-icon">14</span>数据质量与可靠性 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>缺失数据比例(%)</label>
+                        <input type="number" step="0.01" placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>重复数据处理数量</label>
+                        <input type="number" placeholder="0">
+                    </div>
+                    <div class="form-group">
+                        <label>网络模块度Q值</label>
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="form-group">
+                        <label>平均聚类系数</label>
+                        <input type="number" step="0.001" placeholder="0.000">
+                    </div>
+                    <div class="form-group">
+                        <label>Top-N参数设置</label>
+                        <input type="text" placeholder="如：50, 50, 50">
+                    </div>
+                    <div class="form-group">
+                        <label>阈值筛选标准</label>
+                        <input type="text" placeholder="如：c, cc, ccv">
+                    </div>
+                    <div class="form-group">
+                        <label>数据预处理方法</label>
+                        <textarea placeholder="描述数据预处理的具体方法"></textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 操作按钮 -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" id="saveDataBtn">
+                    💾 保存数据
+                </button>
+                <button class="btn btn-secondary" id="exportDataBtn">
+                    📤 导出Excel
+                </button>
+                <button class="btn btn-success" id="importDataBtn">
+                    📥 导入数据
+                </button>
+                <button class="btn" id="clearAllBtn" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); color: #8b2635;">
+                    🗑️ 清空表单
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 文本采集弹窗 - 美化大屏版本 -->
+    <div id="textCaptureOverlay" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <span>📊 图文智能采集</span>
+                <button class="modal-close" onclick="closeTextCapture()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <!-- 原始输入区域 -->
+                <div>
+                    <label>📝 原始文本/图片：</label>
+                    <textarea id="textCaptureTextarea" placeholder="粘贴该部分的原文、表格或说明…
+💡 可通过粘贴(Ctrl+V)或拖拽图片到此处上传"></textarea>
+                    
+                    <!-- 图片预览区域 -->
+                    <div id="imagePreviewContainer" style="display: none;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span style="font-size: 14px; color: #1890ff;">📷 已上传图片</span>
+                            <button id="removeAllImagesBtn" class="btn btn-sm" style="background: #ff4d4f; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-size: 12px;">🗑️ 全部移除</button>
+                        </div>
+                        <div id="imagePreviewsContainer" style="display: flex; flex-wrap: wrap; gap: 10px; max-height: 300px; overflow-y: auto; padding: 5px;">
+                            <!-- 图片预览将在这里动态添加 -->
+                        </div>
+                    </div>
+                    
+                    <!-- 隐藏的图片上传输入框 -->
+                    <input type="file" id="imageUploadInput" accept="image/*" style="display:none;">
+                    <div style="font-size: 12px; color: #666; text-align: center; margin-top: 5px;">
+        💡 可通过粘贴(Ctrl+V)或拖拽图片到此处上传
+    </div>
+                    
+                    <!-- 采集状态显示区域 -->
+                    <div id="captureStatusContainer">
+                        <div>
+                            <div>
+                                <div id="statusIcon">⏳</div>
+                                <h4 id="statusTitle">准备采集</h4>
+                            </div>
+                            <div id="statusMessage">
+                                等待开始采集...
+                            </div>
+                            <div id="statusProgress">
+                                <div>
+                                    <div id="progressBar"></div>
+                                </div>
+                                <div id="progressText">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 采集结果显示区域 -->
+                <div id="captureResultsContainer" style="display: none;">
+                    <div>
+                        <label>
+                            <span style="font-size: 22px;">🎯</span> 采集结果预览
+                        </label>
+                        <div id="captureResults">
+                            <!-- 采集结果将在这里显示 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 应用到表单按钮 -->
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn btn-primary" id="applyToFormBtn" onclick="applyAllResults()" style="display: none;">
+                        📋 应用到表单
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="closeTextCapture()">取消</button>
+                <button class="btn btn-primary" id="confirmTextCaptureBtn" onclick="confirmTextCapture()">开始采集</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入配置文件 -->
+    <script src="config.js"></script>
+    
+    <!-- 引入工具函数模块 -->
+    <script src="utils.js"></script>
+    
+    <!-- 引入数据管理模块 -->
+    <script src="data-manager.js"></script>
+    
+    <!-- 引入API配置管理模块 -->
+    <script src="api-config.js"></script>
+    
+    <!-- 引入表单初始化模块 -->
+    <script src="form-init.js"></script>
+    
+    <!-- 引入文字采集核心模块 -->
+    <script src="text-capture.js"></script>
+    
+    <!-- 引入AI分析核心模块 -->
+    <script src="ai-core.js"></script>
+    
+    <!-- 引入AI分析结果显示模块 -->
+    <script src="result-display.js"></script>
+    
+    <!-- 引入AI数据分析应用模块 -->
+    <script src="data-apply.js"></script>
+    
+    <!-- 引入AI分析工具函数模块 -->
+    <script src="ai-utils.js"></script>
+    
+    <!-- 引入AI分析提示词模块 -->
+    <script src="prompts.js"></script>
+    
+    <!-- 引入主初始化模块 -->
+    <script src="main.js"></script>
+</body>
+</html>
