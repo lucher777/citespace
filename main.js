@@ -133,6 +133,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 初始化瀑布流布局功能
     initWaterfallFeatures();
+    
+    // 初始化右侧导航栏
+    initSideNavigation();
 });
 
 // 清空所有表单数据
@@ -257,16 +260,14 @@ function addModuleHoverEffects() {
     sections.forEach(section => {
         // 添加鼠标进入效果
         section.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-8px) scale(1.02)';
-            this.style.boxShadow = '0 20px 40px rgba(102, 126, 234, 0.15)';
+            this.style.boxShadow = '0 12px 30px rgba(102, 126, 234, 0.15)';
             this.style.borderColor = 'rgba(102, 126, 234, 0.3)';
         });
         
         // 添加鼠标离开效果
         section.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0) scale(1)';
-            this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.08)';
-            this.style.borderColor = 'rgba(102, 126, 234, 0.1)';
+            this.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.1)';
+            this.style.borderColor = 'rgba(102, 126, 234, 0.15)';
         });
     });
 }
@@ -304,3 +305,140 @@ function debounce(func, wait) {
 }
 
 // 搜索功能已删除，确保模块正常显示
+
+// 右侧导航栏功能
+function initSideNavigation() {
+    const navList = document.getElementById('navList');
+    const navToggle = document.getElementById('navToggle');
+    const sideNav = document.querySelector('.side-navigation');
+    
+    if (!navList || !navToggle || !sideNav) return;
+    
+    // 生成导航项
+    generateNavigationItems();
+    
+    // 绑定导航切换事件
+    navToggle.addEventListener('click', function() {
+        sideNav.classList.toggle('collapsed');
+        const isCollapsed = sideNav.classList.contains('collapsed');
+        navToggle.textContent = isCollapsed ? '▶' : '◀';
+        
+        // 导航栏浮动定位，不需要调整主容器边距
+    });
+    
+    // 监听滚动事件，更新当前活动项
+    window.addEventListener('scroll', debounce(function() {
+        updateActiveNavigationItem();
+    }, 100));
+}
+
+// 生成导航项
+function generateNavigationItems() {
+    const navList = document.getElementById('navList');
+    const sections = document.querySelectorAll('.section');
+    
+    if (!navList) return;
+    
+    const moduleNames = [
+        '数据检索基础信息',
+        '年发文量趋势分析',
+        '国家/地区分布分析',
+        '机构分布分析',
+        '期刊分布分析',
+        '作者分析',
+        '关键词分析',
+        '突现词分析',
+        '网络拓扑特征',
+        '核心引文分析',
+        '引文模式分析',
+        '聚类分析',
+        '时间演化分析',
+        '数据质量评估'
+    ];
+    
+    navList.innerHTML = '';
+    
+    sections.forEach((section, index) => {
+        const navItem = document.createElement('div');
+        navItem.className = 'nav-item';
+        navItem.setAttribute('data-section-index', index);
+        
+        const icon = document.createElement('div');
+        icon.className = 'nav-icon';
+        icon.textContent = index + 1;
+        
+        const text = document.createElement('div');
+        text.className = 'nav-text';
+        text.textContent = moduleNames[index] || `模块 ${index + 1}`;
+        
+        navItem.appendChild(icon);
+        navItem.appendChild(text);
+        
+        // 添加点击事件
+        navItem.addEventListener('click', function() {
+            scrollToSection(section);
+        });
+        
+        navList.appendChild(navItem);
+    });
+}
+
+// 滚动到指定模块
+function scrollToSection(section) {
+    if (!section) return;
+    
+    const headerHeight = document.querySelector('.header').offsetHeight;
+    const settingsBarHeight = document.querySelector('.settings-bar').offsetHeight;
+    const offset = headerHeight + settingsBarHeight + 20;
+    
+    const sectionTop = section.offsetTop - offset;
+    
+    window.scrollTo({
+        top: sectionTop,
+        behavior: 'smooth'
+    });
+    
+    // 添加高亮效果
+    section.style.animation = 'highlightPulse 1s ease-out';
+    setTimeout(() => {
+        section.style.animation = '';
+    }, 1000);
+}
+
+// 更新当前活动导航项
+function updateActiveNavigationItem() {
+    const sections = document.querySelectorAll('.section');
+    const navItems = document.querySelectorAll('.nav-item');
+    const headerHeight = document.querySelector('.header').offsetHeight;
+    const settingsBarHeight = document.querySelector('.settings-bar').offsetHeight;
+    const offset = headerHeight + settingsBarHeight + 100;
+    
+    let activeIndex = -1;
+    
+    sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= offset && rect.bottom > offset) {
+            activeIndex = index;
+        }
+    });
+    
+    // 更新导航项状态
+    navItems.forEach((item, index) => {
+        if (index === activeIndex) {
+            item.classList.add('active');
+        } else {
+            item.classList.remove('active');
+        }
+    });
+}
+
+// 添加高亮动画
+const highlightStyle = document.createElement('style');
+highlightStyle.textContent = `
+    @keyframes highlightPulse {
+        0% { box-shadow: 0 8px 25px rgba(102, 126, 234, 0.1); }
+        50% { box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3); }
+        100% { box-shadow: 0 8px 25px rgba(102, 126, 234, 0.1); }
+    }
+`;
+document.head.appendChild(highlightStyle);

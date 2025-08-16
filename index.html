@@ -53,6 +53,19 @@
             </div>
         </div>
         
+        <!-- 右侧导航栏 -->
+        <div class="side-navigation">
+            <div class="nav-header">
+                <h4>📋 模块导航</h4>
+                <button class="nav-toggle" id="navToggle">◀</button>
+            </div>
+            <div class="nav-content" id="navContent">
+                <div class="nav-list" id="navList">
+                    <!-- 导航项将通过JavaScript动态生成 -->
+                </div>
+            </div>
+        </div>
+        
         <div class="form-container">
             <!-- 数据检索基础信息 -->
             <div class="section">
@@ -497,104 +510,41 @@
                 </div>
             </div>
             
-            <!-- 聚类分析 -->
+            <!-- 网络拓扑特征 -->
             <div class="section">
-                <h3><span class="section-icon">8</span>聚类分析 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
-                <div class="stats-row">
-                    <div class="stats-item">
-                        <div class="stats-label">聚类总数</div>
-                        <input type="number" class="stats-input" data-field-id="total_clusters" placeholder="0">
+                <h3><span class="section-icon">8</span>网络拓扑特征 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>整体网络密度</label>
+                        <input type="number" step="0.0001" data-field-id="overall_network_density" placeholder="0.0000">
                     </div>
-                    <div class="stats-item">
-                        <div class="stats-label">有效聚类数量</div>
-                        <input type="number" class="stats-input" data-field-id="valid_clusters" placeholder="0">
+                    <div class="form-group">
+                        <label>作者合作网络密度</label>
+                        <input type="number" step="0.0001" data-field-id="author_collaboration_density" placeholder="0.0000">
                     </div>
-                    <div class="stats-item">
-                        <div class="stats-label">平均Silhouette值</div>
-                        <input type="number" step="0.001" class="stats-input" data-field-id="average_silhouette" placeholder="0.000">
+                    <div class="form-group">
+                        <label>关键词共现网络密度</label>
+                        <input type="number" step="0.0001" data-field-id="keyword_cooccurrence_density" placeholder="0.0000">
                     </div>
-                    <div class="stats-item">
-                        <div class="stats-label">模块度Q值</div>
-                        <input type="number" step="0.001" class="stats-input" data-field-id="modularity_q" placeholder="0.000">
+                    <div class="form-group">
+                        <label>机构合作网络密度</label>
+                        <input type="number" step="0.0001" data-field-id="institution_collaboration_density" placeholder="0.0000">
                     </div>
-                </div>
-                <div class="cluster-grid">
-                    <div class="cluster-item">
-                        <div class="cluster-label">聚类 #0</div>
-                        <input type="text" class="cluster-input" data-field-id="cluster_0_name" placeholder="聚类名称">
-                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_0_silhouette" placeholder="Silhouette值">
-                        <input type="number" class="cluster-input" data-field-id="cluster_0_papers" placeholder="文献数">
-                        <textarea class="cluster-input" data-field-id="cluster_0_keywords" placeholder="主要关键词" rows="2"></textarea>
+                    <div class="form-group">
+                        <label>最高中心性节点</label>
+                        <input type="text" data-field-id="highest_centrality_node" placeholder="节点名称">
                     </div>
-                    <div class="cluster-item">
-                        <div class="cluster-label">聚类 #1</div>
-                        <input type="text" class="cluster-input" data-field-id="cluster_1_name" placeholder="聚类名称">
-                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_1_silhouette" placeholder="Silhouette值">
-                        <input type="number" class="cluster-input" data-field-id="cluster_1_papers" placeholder="文献数">
-                        <textarea class="cluster-input" data-field-id="cluster_1_keywords" placeholder="主要关键词" rows="2"></textarea>
+                    <div class="form-group">
+                        <label>高中心性节点数量</label>
+                        <input type="number" data-field-id="high_centrality_nodes_count" placeholder="0">
                     </div>
-                    <div class="cluster-item">
-                        <div class="cluster-label">聚类 #2</div>
-                        <input type="text" class="cluster-input" data-field-id="cluster_2_name" placeholder="聚类名称">
-                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_2_silhouette" placeholder="Silhouette值">
-                        <input type="number" class="cluster-input" data-field-id="cluster_2_papers" placeholder="文献数">
-                        <textarea class="cluster-input" data-field-id="cluster_2_keywords" placeholder="主要关键词" rows="2"></textarea>
+                    <div class="form-group">
+                        <label>网络连通组件数</label>
+                        <input type="number" data-field-id="connected_components_count" placeholder="0">
                     </div>
-                    <div class="cluster-item">
-                        <div class="cluster-label">聚类 #3</div>
-                        <input type="text" class="cluster-input" data-field-id="cluster_3_name" placeholder="聚类名称">
-                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_3_silhouette" placeholder="Silhouette值">
-                        <input type="number" class="cluster-input" data-field-id="cluster_3_papers" placeholder="文献数">
-                        <textarea class="cluster-input" data-field-id="cluster_3_keywords" placeholder="主要关键词" rows="2"></textarea>
-                    </div>
-                    <div class="cluster-item">
-                        <div class="cluster-label">聚类 #4</div>
-                        <input type="text" class="cluster-input" data-field-id="cluster_4_name" placeholder="聚类名称">
-                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_4_silhouette" placeholder="Silhouette值">
-                        <input type="number" class="cluster-input" data-field-id="cluster_4_papers" placeholder="文献数">
-                        <textarea class="cluster-input" data-field-id="cluster_4_keywords" placeholder="主要关键词" rows="2"></textarea>
-                    </div>
-                    <div class="cluster-item">
-                        <div class="cluster-label">聚类 #5</div>
-                        <input type="text" class="cluster-input" data-field-id="cluster_5_name" placeholder="聚类名称">
-                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_5_silhouette" placeholder="Silhouette值">
-                        <input type="number" class="cluster-input" data-field-id="cluster_5_papers" placeholder="文献数">
-                        <textarea class="cluster-input" data-field-id="cluster_5_keywords" placeholder="主要关键词" rows="2"></textarea>
-                    </div>
-                    <div class="cluster-item">
-                        <div class="cluster-label">聚类 #6</div>
-                        <input type="text" class="cluster-input" data-field-id="cluster_6_name" placeholder="聚类名称">
-                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_6_silhouette" placeholder="Silhouette值">
-                        <input type="number" class="cluster-input" data-field-id="cluster_6_papers" placeholder="文献数">
-                        <textarea class="cluster-input" data-field-id="cluster_6_keywords" placeholder="主要关键词" rows="2"></textarea>
-                    </div>
-                    <div class="cluster-item">
-                        <div class="cluster-label">聚类 #7</div>
-                        <input type="text" class="cluster-input" data-field-id="cluster_7_name" placeholder="聚类名称">
-                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_7_silhouette" placeholder="Silhouette值">
-                        <input type="number" class="cluster-input" data-field-id="cluster_7_papers" placeholder="文献数">
-                        <textarea class="cluster-input" data-field-id="cluster_7_keywords" placeholder="主要关键词" rows="2"></textarea>
-                    </div>
-                    <div class="cluster-item">
-                        <div class="cluster-label">聚类 #8</div>
-                        <input type="text" class="cluster-input" data-field-id="cluster_8_name" placeholder="聚类名称">
-                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_8_silhouette" placeholder="Silhouette值">
-                        <input type="number" class="cluster-input" data-field-id="cluster_8_papers" placeholder="文献数">
-                        <textarea class="cluster-input" data-field-id="cluster_8_keywords" placeholder="主要关键词" rows="2"></textarea>
-                    </div>
-                    <div class="cluster-item">
-                        <div class="cluster-label">聚类 #9</div>
-                        <input type="text" class="cluster-input" data-field-id="cluster_9_name" placeholder="聚类名称">
-                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_9_silhouette" placeholder="Silhouette值">
-                        <input type="number" class="cluster-input" data-field-id="cluster_9_papers" placeholder="文献数">
-                        <textarea class="cluster-input" data-field-id="cluster_9_keywords" placeholder="主要关键词" rows="2"></textarea>
-                    </div>
-                    <div class="cluster-item">
-                        <div class="cluster-label">聚类 #10</div>
-                        <input type="text" class="cluster-input" data-field-id="cluster_10_name" placeholder="聚类名称">
-                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_10_silhouette" placeholder="Silhouette值">
-                        <input type="number" class="cluster-input" data-field-id="cluster_10_papers" placeholder="文献数">
-                        <textarea class="cluster-input" data-field-id="cluster_10_keywords" placeholder="主要关键词" rows="2"></textarea>
+                    <div class="form-group">
+                        <label>最大连通组件规模</label>
+                        <input type="number" data-field-id="largest_component_size" placeholder="0">
                     </div>
                 </div>
             </div>
@@ -934,41 +884,104 @@
                 </div>
             </div>
             
-            <!-- 网络拓扑特征 -->
+            <!-- 聚类分析 -->
             <div class="section">
-                <h3><span class="section-icon">12</span>网络拓扑特征 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>整体网络密度</label>
-                        <input type="number" step="0.0001" data-field-id="overall_network_density" placeholder="0.0000">
+                <h3><span class="section-icon">12</span>聚类分析 <span class="section-actions"><button class="btn btn-secondary btn-sm text-capture-btn" data-action="text-capture">📊 图文采集</button></span></h3>
+                <div class="stats-row">
+                    <div class="stats-item">
+                        <div class="stats-label">聚类总数</div>
+                        <input type="number" class="stats-input" data-field-id="total_clusters" placeholder="0">
                     </div>
-                    <div class="form-group">
-                        <label>作者合作网络密度</label>
-                        <input type="number" step="0.0001" data-field-id="author_collaboration_density" placeholder="0.0000">
+                    <div class="stats-item">
+                        <div class="stats-label">有效聚类数量</div>
+                        <input type="number" class="stats-input" data-field-id="valid_clusters" placeholder="0">
                     </div>
-                    <div class="form-group">
-                        <label>关键词共现网络密度</label>
-                        <input type="number" step="0.0001" data-field-id="keyword_cooccurrence_density" placeholder="0.0000">
+                    <div class="stats-item">
+                        <div class="stats-label">平均Silhouette值</div>
+                        <input type="number" step="0.001" class="stats-input" data-field-id="average_silhouette" placeholder="0.000">
                     </div>
-                    <div class="form-group">
-                        <label>机构合作网络密度</label>
-                        <input type="number" step="0.0001" data-field-id="institution_collaboration_density" placeholder="0.0000">
+                    <div class="stats-item">
+                        <div class="stats-label">模块度Q值</div>
+                        <input type="number" step="0.001" class="stats-input" data-field-id="modularity_q" placeholder="0.000">
                     </div>
-                    <div class="form-group">
-                        <label>最高中心性节点</label>
-                        <input type="text" data-field-id="highest_centrality_node" placeholder="节点名称">
+                </div>
+                <div class="cluster-grid">
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #0</div>
+                        <input type="text" class="cluster-input" data-field-id="cluster_0_name" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_0_silhouette" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" data-field-id="cluster_0_papers" placeholder="文献数">
+                        <textarea class="cluster-input" data-field-id="cluster_0_keywords" placeholder="主要关键词" rows="2"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label>高中心性节点数量</label>
-                        <input type="number" data-field-id="high_centrality_nodes_count" placeholder="0">
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #1</div>
+                        <input type="text" class="cluster-input" data-field-id="cluster_1_name" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_1_silhouette" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" data-field-id="cluster_1_papers" placeholder="文献数">
+                        <textarea class="cluster-input" data-field-id="cluster_1_keywords" placeholder="主要关键词" rows="2"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label>网络连通组件数</label>
-                        <input type="number" data-field-id="connected_components_count" placeholder="0">
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #2</div>
+                        <input type="text" class="cluster-input" data-field-id="cluster_2_name" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_2_silhouette" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" data-field-id="cluster_2_papers" placeholder="文献数">
+                        <textarea class="cluster-input" data-field-id="cluster_2_keywords" placeholder="主要关键词" rows="2"></textarea>
                     </div>
-                    <div class="form-group">
-                        <label>最大连通组件规模</label>
-                        <input type="number" data-field-id="largest_component_size" placeholder="0">
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #3</div>
+                        <input type="text" class="cluster-input" data-field-id="cluster_3_name" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_3_silhouette" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" data-field-id="cluster_3_papers" placeholder="文献数">
+                        <textarea class="cluster-input" data-field-id="cluster_3_keywords" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #4</div>
+                        <input type="text" class="cluster-input" data-field-id="cluster_4_name" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_4_silhouette" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" data-field-id="cluster_4_papers" placeholder="文献数">
+                        <textarea class="cluster-input" data-field-id="cluster_4_keywords" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #5</div>
+                        <input type="text" class="cluster-input" data-field-id="cluster_5_name" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_5_silhouette" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" data-field-id="cluster_5_papers" placeholder="文献数">
+                        <textarea class="cluster-input" data-field-id="cluster_5_keywords" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #6</div>
+                        <input type="text" class="cluster-input" data-field-id="cluster_6_name" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_6_silhouette" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" data-field-id="cluster_6_papers" placeholder="文献数">
+                        <textarea class="cluster-input" data-field-id="cluster_6_keywords" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #7</div>
+                        <input type="text" class="cluster-input" data-field-id="cluster_7_name" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_7_silhouette" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" data-field-id="cluster_7_papers" placeholder="文献数">
+                        <textarea class="cluster-input" data-field-id="cluster_7_keywords" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #8</div>
+                        <input type="text" class="cluster-input" data-field-id="cluster_8_name" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_8_silhouette" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" data-field-id="cluster_8_papers" placeholder="文献数">
+                        <textarea class="cluster-input" data-field-id="cluster_8_keywords" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #9</div>
+                        <input type="text" class="cluster-input" data-field-id="cluster_9_name" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_9_silhouette" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" data-field-id="cluster_9_papers" placeholder="文献数">
+                        <textarea class="cluster-input" data-field-id="cluster_9_keywords" placeholder="主要关键词" rows="2"></textarea>
+                    </div>
+                    <div class="cluster-item">
+                        <div class="cluster-label">聚类 #10</div>
+                        <input type="text" class="cluster-input" data-field-id="cluster_10_name" placeholder="聚类名称">
+                        <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_10_silhouette" placeholder="Silhouette值">
+                        <input type="number" class="cluster-input" data-field-id="cluster_10_papers" placeholder="文献数">
+                        <textarea class="cluster-input" data-field-id="cluster_10_keywords" placeholder="主要关键词" rows="2"></textarea>
                     </div>
                 </div>
             </div>
