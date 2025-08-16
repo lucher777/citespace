@@ -12,6 +12,183 @@ body {
     line-height: 1.4;
 }
 
+/* 左上角模型信息显示区域 */
+.model-info-corner {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001;
+    max-width: 320px;
+    backdrop-filter: blur(10px);
+}
+
+.model-info-card {
+    background: linear-gradient(135deg, #a8c0ff 0%, #3f87ff 100%);
+    color: white;
+    border-radius: 20px;
+    box-shadow: 
+        0 20px 40px rgba(63, 135, 255, 0.2),
+        0 0 0 1px rgba(255, 255, 255, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+.model-info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%, rgba(255, 255, 255, 0.08) 100%);
+    pointer-events: none;
+}
+
+.model-info-card:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 
+        0 25px 50px rgba(63, 135, 255, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.model-info-header {
+    display: flex;
+    align-items: center;
+    padding: 16px 20px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+.model-info-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20px;
+    right: 20px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+}
+
+.model-icon {
+    font-size: 1.4em;
+    margin-right: 10px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.model-title {
+    font-size: 0.95em;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.model-info-content {
+    padding: 20px;
+    position: relative;
+}
+
+.current-model-display {
+    font-size: 1.15em;
+    font-weight: 700;
+    margin-bottom: 12px;
+    line-height: 1.4;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.model-details {
+    font-size: 0.85em;
+    opacity: 0.95;
+    line-height: 1.5;
+}
+
+.model-details .detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.model-details .detail-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-left: -8px;
+    margin-right: -8px;
+}
+
+.model-details .detail-label {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 0.9em;
+}
+
+.model-details .detail-value {
+    font-weight: 700;
+    text-align: right;
+    color: #ffffff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.model-type-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.75em;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.2) 100%);
+    margin-left: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(5px);
+}
+
+.model-features {
+    margin-top: 12px;
+    font-size: 0.8em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.model-features .feature {
+    display: inline-block;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.15) 100%);
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.75em;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: all 0.2s ease;
+}
+
+.model-features .feature:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.25) 100%);
+}
+
 .container {
     max-width: 1400px;
     margin: 0 auto;
@@ -406,15 +583,27 @@ body {
     align-items: center;
     gap: 6px;
     font-size: 0.95em;
+    white-space: nowrap;
 }
 
 .ranking-item {
     display: grid;
-    grid-template-columns: 30px 1fr 80px 80px 80px;
+    grid-template-columns: 50px 1fr 80px 80px 80px;
     gap: 8px;
     align-items: center;
     padding: 6px 0;
     border-bottom: 1px solid #f0f0f0;
+}
+
+.ranking-item > div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 为作者分析的特殊布局调整 */
+.ranking-item[data-section="author-analysis"] {
+    grid-template-columns: 50px 1fr 80px 1fr 80px;
 }
 
 .ranking-item:last-child {
@@ -1856,21 +2045,7 @@ body.modal-open {
     box-shadow: 0 4px 12px rgba(232, 67, 147, 0.3);
 }
 
-/* 状态信息样式 */
-.settings-status {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.8em;
-    color: #666;
-}
 
-.settings-status .status-item {
-    padding: 4px 8px;
-    border-radius: 6px;
-    background: rgba(255,255,255,0.7);
-    border: 1px solid #e1e5e9;
-}
 
 /* 底部操作按钮区域样式 */
 .action-buttons {
@@ -1928,9 +2103,105 @@ body.modal-open {
     .section {
         margin-bottom: 20px;
     }
+    
+    /* 移动端模型信息卡片调整 */
+    .model-info-corner {
+        top: 10px;
+        left: 10px;
+        max-width: 280px;
+    }
+    
+    .model-info-card {
+        border-radius: 15px;
+    }
+    
+    .model-info-header {
+        padding: 12px 15px;
+    }
+    
+    .model-info-content {
+        padding: 15px;
+    }
+    
+    .current-model-display {
+        font-size: 1.05em;
+    }
+    
+    .model-details {
+        font-size: 0.8em;
+    }
+    
+    .model-features {
+        gap: 4px;
+    }
+    
+    .model-features .feature {
+        padding: 3px 8px;
+        font-size: 0.7em;
+    }
 }
 
 @media (max-width: 768px) {
+    /* 小屏幕模型信息卡片进一步调整 */
+    .model-info-corner {
+        top: 5px;
+        left: 5px;
+        max-width: 250px;
+    }
+    
+    .model-info-card {
+        border-radius: 12px;
+    }
+    
+    .model-info-header {
+        padding: 10px 12px;
+    }
+    
+    .model-icon {
+        font-size: 1.2em;
+        margin-right: 8px;
+    }
+    
+    .model-title {
+        font-size: 0.85em;
+        letter-spacing: 0.6px;
+    }
+    
+    .model-info-content {
+        padding: 12px;
+    }
+    
+    .current-model-display {
+        font-size: 1em;
+        margin-bottom: 8px;
+    }
+    
+    .model-details {
+        font-size: 0.75em;
+    }
+    
+    .model-details .detail-item {
+        margin-bottom: 6px;
+        padding: 4px 0;
+    }
+    
+    .model-type-badge {
+        padding: 3px 8px;
+        font-size: 0.7em;
+        margin-left: 6px;
+    }
+    
+    .model-features {
+        margin-top: 8px;
+        gap: 3px;
+    }
+    
+    .model-features .feature {
+        padding: 2px 6px;
+        font-size: 0.65em;
+        border-radius: 8px;
+    }
+    
     .settings-bar {
         flex-direction: column;
         align-items: stretch;
@@ -1952,10 +2223,7 @@ body.modal-open {
         flex-wrap: wrap;
     }
     
-    .settings-status {
-        justify-content: center;
-        flex-wrap: wrap;
-    }
+
     
     .action-buttons {
         flex-direction: column;
@@ -1965,5 +2233,67 @@ body.modal-open {
     .action-buttons .btn {
         width: 100%;
         max-width: 300px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* 超小屏幕模型信息卡片调整 */
+    .model-info-corner {
+        top: 2px;
+        left: 2px;
+        max-width: 200px;
+    }
+    
+    .model-info-card {
+        border-radius: 10px;
+    }
+    
+    .model-info-header {
+        padding: 8px 10px;
+    }
+    
+    .model-icon {
+        font-size: 1.1em;
+        margin-right: 6px;
+    }
+    
+    .model-title {
+        font-size: 0.8em;
+        letter-spacing: 0.5px;
+    }
+    
+    .model-info-content {
+        padding: 10px;
+    }
+    
+    .current-model-display {
+        font-size: 0.9em;
+        margin-bottom: 6px;
+    }
+    
+    .model-details {
+        font-size: 0.7em;
+    }
+    
+    .model-details .detail-item {
+        margin-bottom: 4px;
+        padding: 3px 0;
+    }
+    
+    .model-type-badge {
+        padding: 2px 6px;
+        font-size: 0.65em;
+        margin-left: 4px;
+    }
+    
+    .model-features {
+        margin-top: 6px;
+        gap: 2px;
+    }
+    
+    .model-features .feature {
+        padding: 1px 4px;
+        font-size: 0.6em;
+        border-radius: 6px;
     }
 }

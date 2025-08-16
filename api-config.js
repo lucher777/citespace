@@ -11,26 +11,25 @@ function autoSaveApiSettings() {
     API_CONFIG.setModel(model);
     API_CONFIG.saveConfigToStorage();
     
-    // 更新当前模型状态显示
+    // 立即更新所有显示
     updateCurrentModelStatus();
+    updateModelInfoDisplay();
+    updateSaveButtonState();
     
-    console.log('设置已保存:', { provider, model });
+    console.log('设置已自动保存:', { provider, model });
 }
 
 async function saveApiSettings() {
-    autoSaveApiSettings();
-    showToast('设置已保存！正在测试连接...', 'success');
+    // 由于设置已经自动保存，这里只进行连接测试
+    showToast('正在测试当前模型连接...', 'success');
     
-    // 更新保存按钮状态
-    updateSaveButtonState();
-    
-    // 保存设置后自动测试连接
+    // 测试连接
     if (typeof testApiConnection === 'function') {
         const ok = await testApiConnection(false);
         if (ok) {
-            showToast('✅ 设置已保存并通过连接测试！', 'success');
+            showToast('当前模型连接测试成功！', 'success');
         } else {
-            showToast('❌ 设置已保存但连接测试失败，请检查配置', 'error');
+            showToast('连接测试失败，请检查配置', 'error');
         }
     }
 }
@@ -55,6 +54,11 @@ function loadApiSettings() {
     
     // 更新当前模型状态显示
     updateCurrentModelStatus();
+    
+    // 确保左上角模型信息显示正确
+    setTimeout(() => {
+        updateModelInfoDisplay();
+    }, 100);
 }
 
 /* ---------------- 模型下拉列表管理 ---------------- */
@@ -81,18 +85,25 @@ function updateModelOptions(skipAutoSave = false) {
         const flash = providerModels.find(m => m.key === 'flash');
         if (flash) {
             modelSelect.value = flash.name;
-            // 不自动设置，等待用户手动保存
+            // 自动保存默认选择
+            if (!skipAutoSave) {
+                autoSaveApiSettings();
+            }
         } else if (providerModels.length > 0) {
             // 如果没有找到flash模型，但有其他模型可用，则选择第一个
             modelSelect.value = providerModels[0].name;
-            // 不自动设置，等待用户手动保存
+            // 自动保存默认选择
+            if (!skipAutoSave) {
+                autoSaveApiSettings();
+            }
         }
     }
     
-    // 移除自动保存逻辑，改为手动保存
-    // if (!skipAutoSave) {
-    //     autoSaveApiSettings();
-    // }
+    // 更新模型信息显示
+    updateModelInfoDisplay();
+    
+    // 更新保存按钮状态
+    updateSaveButtonState();
 }
 
 /* ---------------- API连接测试 ---------------- */
@@ -169,25 +180,106 @@ async function testApiConnection(silent = false) {
 
 // 更新当前模型状态显示
 function updateCurrentModelStatus() {
-    const statusElement = document.getElementById('currentModelStatus');
-    if (statusElement) {
-        const provider = API_CONFIG.CURRENT_CONFIG.provider;
-        const model = API_CONFIG.CURRENT_CONFIG.model;
-        const providerName = API_CONFIG.PROVIDER_CONFIG[provider]?.name || provider;
-        const modelDisplayName = getModelDisplayNameForStatus(model);
-        
-        statusElement.innerHTML = `🤖 ${providerName} | ${modelDisplayName}`;
-        statusElement.title = `当前使用: ${providerName} - ${model}`;
+    // 由于移除了右侧状态显示，只更新左上角的模型信息显示
+    updateModelInfoDisplay();
+}
+
+// 更新左上角模型信息显示
+function updateModelInfoDisplay() {
+    const currentModelInfo = document.getElementById('currentModelInfo');
+    const modelDetails = document.getElementById('modelDetails');
+    
+    if (!currentModelInfo || !modelDetails) return;
+    
+    // 获取已保存的模型配置（确保显示的是实际使用的模型）
+    const savedProvider = API_CONFIG.CURRENT_CONFIG.provider;
+    const savedModel = API_CONFIG.CURRENT_CONFIG.model;
+    
+    const providerName = API_CONFIG.PROVIDER_CONFIG[savedProvider]?.name || savedProvider;
+    const modelDisplayName = getModelDisplayNameForStatus(savedModel);
+    
+    // 获取模型类型信息
+    const getModelType = (modelName) => {
+        if (modelName.includes('vision') || modelName.includes('vl')) return '视觉模型';
+        if (modelName.includes('32k')) return '大上下文模型';
+        if (modelName.includes('pro')) return '专业模型';
+        if (modelName.includes('lite')) return '轻量模型';
+        if (modelName.includes('flash')) return '快速模型';
+        return '标准模型';
+    };
+    
+    const modelType = getModelType(savedModel);
+    
+    // 构建模型功能列表
+    const features = [];
+    if (savedModel.includes('vision') || savedModel.includes('vl')) {
+        features.push('图片分析');
     }
+    if (savedModel.includes('32k')) {
+        features.push('32K上下文');
+    }
+    if (savedModel.includes('pro')) {
+        features.push('专业版');
+    }
+    if (savedModel.includes('lite')) {
+        features.push('轻量版');
+    }
+    if (savedModel.includes('flash')) {
+        features.push('快速响应');
+    }
+    
+    // 更新当前模型显示
+    currentModelInfo.innerHTML = `
+        <div>${providerName}</div>
+        <div>${modelDisplayName} <span class="model-type-badge">${modelType}</span></div>
+    `;
+    
+    // 更新详细信息
+    modelDetails.innerHTML = `
+        <div class="detail-item">
+            <span class="detail-label">提供商</span>
+            <span class="detail-value">${providerName}</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">模型名称</span>
+            <span class="detail-value">${modelDisplayName}</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">模型类型</span>
+            <span class="detail-value">${modelType}</span>
+        </div>
+        <div class="detail-item">
+            <span class="detail-label">技术名称</span>
+            <span class="detail-value">${savedModel}</span>
+        </div>
+        ${features.length > 0 ? `
+        <div class="model-features">
+            ${features.map(feature => `<span class="feature">${feature}</span>`).join('')}
+        </div>
+        ` : ''}
+    `;
 }
 
 // 获取模型显示名称（用于状态显示）
 function getModelDisplayNameForStatus(modelName) {
-    const shortNames = {
-        'doubao-seed-1-6-flash-250715': 'Flash',
-        'deepseek-chat': 'Chat',
-        'deepseek-reasoner': 'Reasoner',
-        'deepseek-vl': 'Vision',
+    const displayNames = {
+        // 豆包模型 - 使用更完整的显示名称
+        'doubao-seed-1-6-flash-250715': '豆包 Flash',
+        'kimi-k2-250711': 'Kimi K2',
+        'doubao-seed-1-6-250615': '豆包 Seed-1-6',
+        'doubao-1.5-vision-pro-250328': '豆包 1.5 Vision Pro',
+        'doubao-1.5-vision-lite-250315': '豆包 1.5 Vision Lite',
+        'doubao-1-5-vision-pro-32k-250115': '豆包 1-5 Vision Pro 32K',
+        'doubao-1-5-ui-tars-250428': '豆包 1-5 UI Tars',
+        'doubao-1-5-lite-32k-250115': '豆包 1-5 Lite 32K',
+        'doubao-1-5-pro-32k-250115': '豆包 1-5 Pro 32K',
+        
+        // DeepSeek 模型
+        'deepseek-chat': 'DeepSeek Chat',
+        'deepseek-reasoner': 'DeepSeek Reasoner',
+        'deepseek-vl': 'DeepSeek Vision',
+        
+        // OpenAI 模型
         'gpt-4': 'GPT-4',
         'gpt-4o': 'GPT-4o',
         'gpt-4o-mini': 'GPT-4o Mini',
@@ -195,34 +287,28 @@ function getModelDisplayNameForStatus(modelName) {
         'gpt-3.5-turbo': 'GPT-3.5'
     };
     
-    return shortNames[modelName] || modelName.split('-').pop() || modelName;
+    return displayNames[modelName] || modelName;
 }
+
+// 全局模型显示名称获取函数（供其他模块使用）
+window.getModelDisplayName = function(modelName) {
+    return getModelDisplayNameForStatus(modelName);
+};
 
 // 检查是否有未保存的设置更改
 function hasUnsavedChanges() {
-    const currentProvider = API_CONFIG.CURRENT_CONFIG.provider;
-    const currentModel = API_CONFIG.CURRENT_CONFIG.model;
-    
-    const selectedProvider = document.getElementById('provider_select').value;
-    const selectedModel = document.getElementById('model_select').value;
-    
-    return currentProvider !== selectedProvider || currentModel !== selectedModel;
+    // 由于现在设置会自动保存，所以总是返回false
+    return false;
 }
 
 // 更新保存按钮状态
 function updateSaveButtonState() {
     const saveBtn = document.getElementById('saveApiSettingsBtn');
     if (saveBtn) {
-        const hasChanges = hasUnsavedChanges();
-        if (hasChanges) {
-            saveBtn.textContent = '💾 保存设置*';
-            saveBtn.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%)';
-            saveBtn.style.color = 'white';
-        } else {
-            saveBtn.textContent = '💾 保存设置';
-            saveBtn.style.background = '';
-            saveBtn.style.color = '';
-        }
+        // 由于设置会自动保存，按钮现在主要用于测试连接
+        saveBtn.textContent = '🔗 测试连接';
+        saveBtn.style.background = '';
+        saveBtn.style.color = '';
     }
 }
 
@@ -234,6 +320,30 @@ window.updateModelOptions = updateModelOptions;
 window.testApiConnection = testApiConnection;
 window.hasUnsavedChanges = hasUnsavedChanges;
 window.updateSaveButtonState = updateSaveButtonState;
+window.updateModelInfoDisplay = updateModelInfoDisplay;
+
+// 添加事件监听器
+document.addEventListener('DOMContentLoaded', function() {
+    // 监听提供商选择变化
+    const providerSelect = document.getElementById('provider_select');
+    if (providerSelect) {
+        providerSelect.addEventListener('change', function() {
+            updateModelOptions();
+            // 提供商变化时，模型会自动保存（在updateModelOptions中处理）
+        });
+    }
+    
+    // 监听模型选择变化
+    const modelSelect = document.getElementById('model_select');
+    if (modelSelect) {
+        modelSelect.addEventListener('change', function() {
+            // 立即保存新的模型设置
+            autoSaveApiSettings();
+            // 显示成功提示
+            showToast('模型已自动保存并设置为当前使用模型', 'success');
+        });
+    }
+});
 // 测试全局模型选择功能
 window.testGlobalModelSelection = function() {
     console.log('=== 全局模型选择测试 ===');
@@ -272,3 +382,35 @@ window.testGlobalModelSelection = function() {
 };
 
 window.updateCurrentModelStatus = updateCurrentModelStatus;
+
+// 验证模型配置是否正确保存和加载
+window.verifyModelConfiguration = function() {
+    console.log('=== 模型配置验证 ===');
+    
+    // 获取当前选择的模型
+    const selectedProvider = document.getElementById('provider_select')?.value;
+    const selectedModel = document.getElementById('model_select')?.value;
+    
+    // 获取已保存的模型
+    const savedProvider = API_CONFIG.CURRENT_CONFIG.provider;
+    const savedModel = API_CONFIG.CURRENT_CONFIG.model;
+    
+    console.log('当前选择:', { provider: selectedProvider, model: selectedModel });
+    console.log('已保存配置:', { provider: savedProvider, model: savedModel });
+    
+    // 验证是否一致
+    const isConsistent = selectedProvider === savedProvider && selectedModel === savedModel;
+    console.log('配置一致性:', isConsistent ? '✅ 一致' : '❌ 不一致');
+    
+    // 验证模型是否可用
+    const providerModels = API_CONFIG.getProviderModels(savedProvider);
+    const modelExists = providerModels.some(m => m.name === savedModel);
+    console.log('模型可用性:', modelExists ? '✅ 可用' : '❌ 不可用');
+    
+    return {
+        selected: { provider: selectedProvider, model: selectedModel },
+        saved: { provider: savedProvider, model: savedModel },
+        isConsistent: isConsistent,
+        modelExists: modelExists
+    };
+};

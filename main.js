@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 如果模型无效，显示警告
         if (!modelStatus.isValid) {
-            showToast('⚠️ 模型配置已自动调整', 'warning');
+            showToast('模型配置已自动调整', 'warning');
         }
     }
     
@@ -42,8 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typeof updateSaveButtonState === 'function') {
             updateSaveButtonState();
         }
-        // 显示提示，告知用户需要保存设置
-        showToast('⚠️ 请点击"保存设置"按钮来应用新的提供商选择', 'warning');
+        // 由于现在提供商选择会自动保存，不再需要提示用户手动保存
     });
     
     // 绑定模型选择变化事件
@@ -52,8 +51,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (typeof updateSaveButtonState === 'function') {
             updateSaveButtonState();
         }
-        // 显示提示，告知用户需要保存设置
-        showToast('⚠️ 请点击"保存设置"按钮来应用新的模型选择', 'warning');
+        // 由于现在模型选择会自动保存，不再需要提示用户手动保存
     });
     
     // 检查测试连接按钮是否存在

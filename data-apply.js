@@ -68,7 +68,7 @@ function applyCaptureResults(customData = null) {
             }
         });
         
-        showToast(`✅ 成功应用 ${appliedCount} 个字段到表单！\n已应用字段：${appliedFields.join(', ')}`, 'success');
+        showToast(`成功应用 ${appliedCount} 个字段到表单！\n已应用字段：${appliedFields.join(', ')}`, 'success');
         
         // 滚动到目标区域
         targetSection.scrollIntoView({ 
@@ -92,10 +92,10 @@ function applyCaptureResults(customData = null) {
                 firstTextarea.style.borderColor = '';
                 firstTextarea.style.boxShadow = '';
             }, 3000);
-            showToast('✅ 已将采集到的文字应用到该区域的文本框', 'success');
+            showToast('已将采集到的文字应用到该区域的文本框', 'success');
             targetSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
         } else {
-            showToast('⚠️ 没有找到匹配的字段！请检查字段映射是否正确。', 'warning');
+            showToast('没有找到匹配的字段！请检查字段映射是否正确。', 'warning');
         }
     }
 }

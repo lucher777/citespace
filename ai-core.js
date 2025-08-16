@@ -69,12 +69,26 @@ async function analyzeSectionInModal(textInput, imageFile, descriptor, targetSec
     console.log('视觉模型支持:', modelInfo.isVisionSupported);
     console.log('=====================');
     
+    // 获取模型类型信息
+    const getModelType = (modelName) => {
+        if (modelName.includes('vision') || modelName.includes('vl')) return '视觉模型';
+        if (modelName.includes('32k')) return '大上下文模型';
+        if (modelName.includes('pro')) return '专业模型';
+        if (modelName.includes('lite')) return '轻量模型';
+        if (modelName.includes('flash')) return '快速模型';
+        return '标准模型';
+    };
+    
+    const modelType = getModelType(currentModel);
+    const isVisionModel = currentModel.includes('vision') || currentModel.includes('vl');
+    
     // 更新状态：检查配置
-    updateCaptureStatus('⚙️', '检查配置', `正在验证 ${currentProvider} 模型配置...`, true, 10);
+    updateCaptureStatus('⚙️', '检查配置', `正在验证 ${modelInfo.providerName} ${modelDisplayName} (${modelType}) 模型配置...`, true, 10);
     await new Promise(resolve => setTimeout(resolve, 300));
     
     // 更新状态：准备提示词
-    updateCaptureStatus('📝', '准备分析', `正在构建分析提示词，目标区域：${descriptor.title}...`, true, 20);
+    const analysisType = imageFile ? '图文分析' : '文本分析';
+    updateCaptureStatus('📝', '准备分析', `正在构建${analysisType}提示词，目标区域：${descriptor.title}...`, true, 20);
     await new Promise(resolve => setTimeout(resolve, 300));
     
     // 构建系统提示词
@@ -211,13 +225,19 @@ async function analyzeSectionInModal(textInput, imageFile, descriptor, targetSec
         }
     }
     
+    // 获取模型的完整显示名称
+    const modelDisplayName = typeof getModelDisplayName === 'function' ? 
+        getModelDisplayName(currentModel) : currentModel;
+    const providerName = modelInfo.providerName;
+    
     // 更新状态：调用AI模型
-    updateCaptureStatus('🤖', 'AI分析中', `正在使用 ${currentModel} 模型分析内容...`, true, 45);
+    const analysisMode = imageFile ? '图文' : '文本';
+    updateCaptureStatus('🤖', 'AI分析中', `正在使用 ${providerName} ${modelDisplayName} (${modelType}) 进行${analysisMode}分析...`, true, 45);
     
     // 模拟AI分析过程的进度更新
     for (let i = 0; i < 10; i++) {
         await new Promise(resolve => setTimeout(resolve, 200));
-        updateCaptureStatus('🤖', 'AI分析中', `正在使用 ${currentModel} 模型分析内容... (${i+1}/10)`, true, 45 + i*2);
+        updateCaptureStatus('🤖', 'AI分析中', `正在使用 ${providerName} ${modelDisplayName} (${modelType}) 进行${analysisMode}分析... (${i+1}/10)`, true, 45 + i*2);
     }
     
     // 调用API
@@ -276,11 +296,11 @@ async function analyzeSectionInModal(textInput, imageFile, descriptor, targetSec
         console.log('采集解析完成的JSON数据:', JSON.stringify(extractedData, null, 2));
     
     // 更新状态：完成
-    updateCaptureStatus('✅', '采集完成', `成功识别到 ${Object.keys(extractedData).length} 个字段的数据！`, true, 90);
+    updateCaptureStatus('✅', '采集完成', `使用 ${providerName} ${modelDisplayName} 成功识别到 ${Object.keys(extractedData).length} 个字段的数据！`, true, 90);
     await new Promise(resolve => setTimeout(resolve, 500));
     
     // 最终状态
-    updateCaptureStatus('🎉', '分析完成', `分析完成，共识别到 ${Object.keys(extractedData).length} 个字段！`, true, 100);
+    updateCaptureStatus('🎉', '分析完成', `使用 ${providerName} ${modelDisplayName} (${modelType}) 分析完成，共识别到 ${Object.keys(extractedData).length} 个字段！`, true, 100);
     await new Promise(resolve => setTimeout(resolve, 500));
     
     // 确保状态容器被隐藏

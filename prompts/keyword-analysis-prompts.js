@@ -16,7 +16,7 @@ const KEYWORD_ANALYSIS_PROMPT = `你是专业的CiteSpace关键词分析数据�
 3. **keyword_X_term** (关键词X的词汇)
    - 识别模式：排名第X的关键词、第X位关键词
    - 示例："排名第1的关键词是X"、"第X位关键词"
-   - 支持keyword_1_term到keyword_15_term
+   - 支持keyword_1_term到keyword_20_term
 
 4. **keyword_X_frequency** (关键词X的频次)
    - 识别模式：关键词X的出现频次、频率
@@ -83,7 +83,47 @@ const KEYWORD_ANALYSIS_PROMPT = `你是专业的CiteSpace关键词分析数据�
   "keyword_10_term": "区块链",
   "keyword_10_frequency": 43,
   "keyword_10_centrality": 0.132,
-  "keyword_10_first_year": 2019
+  "keyword_10_first_year": 2019,
+  "keyword_11_term": "物联网",
+  "keyword_11_frequency": 38,
+  "keyword_11_centrality": 0.118,
+  "keyword_11_first_year": 2019,
+  "keyword_12_term": "云计算",
+  "keyword_12_frequency": 35,
+  "keyword_12_centrality": 0.104,
+  "keyword_12_first_year": 2020,
+  "keyword_13_term": "边缘计算",
+  "keyword_13_frequency": 32,
+  "keyword_13_centrality": 0.091,
+  "keyword_13_first_year": 2020,
+  "keyword_14_term": "5G技术",
+  "keyword_14_frequency": 29,
+  "keyword_14_centrality": 0.078,
+  "keyword_14_first_year": 2021,
+  "keyword_15_term": "量子计算",
+  "keyword_15_frequency": 26,
+  "keyword_15_centrality": 0.065,
+  "keyword_15_first_year": 2021,
+  "keyword_16_term": "元宇宙",
+  "keyword_16_frequency": 23,
+  "keyword_16_centrality": 0.052,
+  "keyword_16_first_year": 2022,
+  "keyword_17_term": "数字孪生",
+  "keyword_17_frequency": 20,
+  "keyword_17_centrality": 0.039,
+  "keyword_17_first_year": 2022,
+  "keyword_18_term": "生成式AI",
+  "keyword_18_frequency": 17,
+  "keyword_18_centrality": 0.026,
+  "keyword_18_first_year": 2023,
+  "keyword_19_term": "大语言模型",
+  "keyword_19_frequency": 14,
+  "keyword_19_centrality": 0.013,
+  "keyword_19_first_year": 2023,
+  "keyword_20_term": "多模态AI",
+  "keyword_20_frequency": 11,
+  "keyword_20_centrality": 0.001,
+  "keyword_20_first_year": 2024
 }
 
 **重要提醒：**
@@ -91,7 +131,7 @@ const KEYWORD_ANALYSIS_PROMPT = `你是专业的CiteSpace关键词分析数据�
 2. 数字字段保持原始格式，中心性保留3位小数
 3. 年份字段使用4位数字格式
 4. 关键词字段保持原始词汇
-5. 支持提取前10个关键词的完整信息
+5. 支持提取前20个关键词的完整信息
 6. 不要输出任何JSON以外的内容`;
 
 // 导出提示词

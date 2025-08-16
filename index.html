@@ -13,6 +13,24 @@
         <span class="toast-message">操作成功</span>
     </div>
     <div class="container">
+        <!-- 左上角模型信息显示区域 -->
+        <div class="model-info-corner">
+            <div class="model-info-card">
+                <div class="model-info-header">
+                    <span class="model-icon">🤖</span>
+                    <span class="model-title">当前AI模型</span>
+                </div>
+                <div class="model-info-content">
+                    <div id="currentModelInfo" class="current-model-display">
+                        <!-- 当前模型信息将在这里显示 -->
+                    </div>
+                    <div class="model-details" id="modelDetails">
+                        <!-- 模型详细信息将在这里显示 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <div class="header">
             <h1>🔬 CiteSpace数据采集系统</h1>
             <p>教育技术学研究数据采集工具 - 全面版</p>
@@ -38,18 +56,9 @@
                 <button class="btn btn-test" id="testApiConnectionBtn">
                     🔗 测试连接
                 </button>
-                <button class="btn btn-save" id="saveApiSettingsBtn" onclick="saveApiSettings()">
-                    💾 保存设置
-                </button>
                 <button class="btn btn-clear" id="clearAllBtnTop">
                     🗑️ 清空表单
                 </button>
-            </div>
-            
-            <div class="settings-status">
-                <div id="currentModelStatus" class="status-item" style="color: #28a745; font-weight: 600;">
-                    <!-- 当前模型状态将在这里显示 -->
-                </div>
             </div>
         </div>
         
@@ -239,6 +248,111 @@
                         <input type="number" step="0.01" data-field-id="country_5_ratio" placeholder="0.00">
                         <input type="number" step="0.001" data-field-id="country_5_centrality" placeholder="0.000">
                     </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">6</div>
+                        <input type="text" data-field-id="country_6_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_6_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_6_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_6_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">7</div>
+                        <input type="text" data-field-id="country_7_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_7_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_7_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_7_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">8</div>
+                        <input type="text" data-field-id="country_8_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_8_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_8_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_8_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">9</div>
+                        <input type="text" data-field-id="country_9_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_9_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_9_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_9_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">10</div>
+                        <input type="text" data-field-id="country_10_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_10_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_10_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_10_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">11</div>
+                        <input type="text" data-field-id="country_11_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_11_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_11_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_11_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">12</div>
+                        <input type="text" data-field-id="country_12_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_12_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_12_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_12_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">13</div>
+                        <input type="text" data-field-id="country_13_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_13_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_13_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_13_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">14</div>
+                        <input type="text" data-field-id="country_14_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_14_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_14_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_14_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">15</div>
+                        <input type="text" data-field-id="country_15_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_15_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_15_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_15_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">16</div>
+                        <input type="text" data-field-id="country_16_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_16_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_16_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_16_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">17</div>
+                        <input type="text" data-field-id="country_17_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_17_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_17_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_17_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">18</div>
+                        <input type="text" data-field-id="country_18_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_18_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_18_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_18_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">19</div>
+                        <input type="text" data-field-id="country_19_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_19_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_19_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_19_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">20</div>
+                        <input type="text" data-field-id="country_20_name" placeholder="国家名称">
+                        <input type="number" data-field-id="country_20_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="country_20_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="country_20_centrality" placeholder="0.000">
+                    </div>
                 </div>
             </div>
             
@@ -306,6 +420,111 @@
                         <input type="number" data-field-id="journal_5_papers" placeholder="0">
                         <input type="number" step="0.01" data-field-id="journal_5_ratio" placeholder="0.00">
                         <input type="number" step="0.001" data-field-id="journal_5_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">6</div>
+                        <input type="text" data-field-id="journal_6_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_6_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_6_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_6_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">7</div>
+                        <input type="text" data-field-id="journal_7_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_7_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_7_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_7_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">8</div>
+                        <input type="text" data-field-id="journal_8_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_8_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_8_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_8_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">9</div>
+                        <input type="text" data-field-id="journal_9_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_9_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_9_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_9_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">10</div>
+                        <input type="text" data-field-id="journal_10_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_10_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_10_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_10_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">11</div>
+                        <input type="text" data-field-id="journal_11_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_11_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_11_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_11_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">12</div>
+                        <input type="text" data-field-id="journal_12_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_12_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_12_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_12_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">13</div>
+                        <input type="text" data-field-id="journal_13_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_13_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_13_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_13_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">14</div>
+                        <input type="text" data-field-id="journal_14_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_14_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_14_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_14_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">15</div>
+                        <input type="text" data-field-id="journal_15_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_15_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_15_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_15_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">16</div>
+                        <input type="text" data-field-id="journal_16_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_16_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_16_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_16_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">17</div>
+                        <input type="text" data-field-id="journal_17_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_17_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_17_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_17_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">18</div>
+                        <input type="text" data-field-id="journal_18_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_18_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_18_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_18_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">19</div>
+                        <input type="text" data-field-id="journal_19_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_19_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_19_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_19_impact_factor" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">20</div>
+                        <input type="text" data-field-id="journal_20_name" placeholder="期刊名称">
+                        <input type="number" data-field-id="journal_20_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="journal_20_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="journal_20_impact_factor" placeholder="0.000">
                     </div>
                 </div>
             </div>
@@ -375,6 +594,111 @@
                         <input type="number" step="0.01" data-field-id="institution_5_ratio" placeholder="0.00">
                         <input type="number" step="0.001" data-field-id="institution_5_centrality" placeholder="0.000">
                     </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">6</div>
+                        <input type="text" data-field-id="institution_6_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_6_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_6_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_6_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">7</div>
+                        <input type="text" data-field-id="institution_7_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_7_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_7_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_7_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">8</div>
+                        <input type="text" data-field-id="institution_8_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_8_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_8_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_8_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">9</div>
+                        <input type="text" data-field-id="institution_9_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_9_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_9_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_9_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">10</div>
+                        <input type="text" data-field-id="institution_10_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_10_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_10_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_10_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">11</div>
+                        <input type="text" data-field-id="institution_11_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_11_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_11_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_11_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">12</div>
+                        <input type="text" data-field-id="institution_12_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_12_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_12_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_12_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">13</div>
+                        <input type="text" data-field-id="institution_13_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_13_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_13_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_13_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">14</div>
+                        <input type="text" data-field-id="institution_14_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_14_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_14_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_14_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">15</div>
+                        <input type="text" data-field-id="institution_15_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_15_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_15_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_15_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">16</div>
+                        <input type="text" data-field-id="institution_16_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_16_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_16_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_16_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">17</div>
+                        <input type="text" data-field-id="institution_17_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_17_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_17_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_17_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">18</div>
+                        <input type="text" data-field-id="institution_18_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_18_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_18_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_18_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">19</div>
+                        <input type="text" data-field-id="institution_19_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_19_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_19_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_19_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">20</div>
+                        <input type="text" data-field-id="institution_20_name" placeholder="机构名称">
+                        <input type="number" data-field-id="institution_20_papers" placeholder="0">
+                        <input type="number" step="0.01" data-field-id="institution_20_ratio" placeholder="0.00">
+                        <input type="number" step="0.001" data-field-id="institution_20_centrality" placeholder="0.000">
+                    </div>
                 </div>
             </div>
             
@@ -405,47 +729,152 @@
                 </div>
                 <div class="ranking-group">
                     <div class="ranking-title">👨‍🎓 作者排名</div>
-                    <div class="ranking-item" style="font-weight: bold; background: #f8f9fa;">
+                    <div class="ranking-item" style="font-weight: bold; background: #f8f9fa;" data-section="author-analysis">
                         <div>排名</div>
                         <div>作者姓名</div>
                         <div>发文量</div>
                         <div>机构</div>
                         <div>中心性</div>
                     </div>
-                    <div class="ranking-item">
+                    <div class="ranking-item" data-section="author-analysis">
                         <div class="rank-number">1</div>
                         <input type="text" data-field-id="author_1_name" placeholder="作者姓名">
                         <input type="number" data-field-id="author_1_papers" placeholder="0">
                         <input type="text" data-field-id="author_1_institution" placeholder="所属机构">
                         <input type="number" step="0.001" data-field-id="author_1_centrality" placeholder="0.000">
                     </div>
-                    <div class="ranking-item">
+                    <div class="ranking-item" data-section="author-analysis">
                         <div class="rank-number">2</div>
                         <input type="text" data-field-id="author_2_name" placeholder="作者姓名">
                         <input type="number" data-field-id="author_2_papers" placeholder="0">
                         <input type="text" data-field-id="author_2_institution" placeholder="所属机构">
                         <input type="number" step="0.001" data-field-id="author_2_centrality" placeholder="0.000">
                     </div>
-                    <div class="ranking-item">
+                    <div class="ranking-item" data-section="author-analysis">
                         <div class="rank-number">3</div>
                         <input type="text" data-field-id="author_3_name" placeholder="作者姓名">
                         <input type="number" data-field-id="author_3_papers" placeholder="0">
                         <input type="text" data-field-id="author_3_institution" placeholder="所属机构">
                         <input type="number" step="0.001" data-field-id="author_3_centrality" placeholder="0.000">
                     </div>
-                    <div class="ranking-item">
+                    <div class="ranking-item" data-section="author-analysis">
                         <div class="rank-number">4</div>
                         <input type="text" data-field-id="author_4_name" placeholder="作者姓名">
                         <input type="number" data-field-id="author_4_papers" placeholder="0">
                         <input type="text" data-field-id="author_4_institution" placeholder="所属机构">
                         <input type="number" step="0.001" data-field-id="author_4_centrality" placeholder="0.000">
                     </div>
-                    <div class="ranking-item">
+                    <div class="ranking-item" data-section="author-analysis">
                         <div class="rank-number">5</div>
                         <input type="text" data-field-id="author_5_name" placeholder="作者姓名">
                         <input type="number" data-field-id="author_5_papers" placeholder="0">
                         <input type="text" data-field-id="author_5_institution" placeholder="所属机构">
                         <input type="number" step="0.001" data-field-id="author_5_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">6</div>
+                        <input type="text" data-field-id="author_6_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_6_papers" placeholder="0">
+                        <input type="text" data-field-id="author_6_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_6_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">7</div>
+                        <input type="text" data-field-id="author_7_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_7_papers" placeholder="0">
+                        <input type="text" data-field-id="author_7_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_7_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">8</div>
+                        <input type="text" data-field-id="author_8_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_8_papers" placeholder="0">
+                        <input type="text" data-field-id="author_8_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_8_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">9</div>
+                        <input type="text" data-field-id="author_9_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_9_papers" placeholder="0">
+                        <input type="text" data-field-id="author_9_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_9_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">10</div>
+                        <input type="text" data-field-id="author_10_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_10_papers" placeholder="0">
+                        <input type="text" data-field-id="author_10_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_10_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">11</div>
+                        <input type="text" data-field-id="author_11_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_11_papers" placeholder="0">
+                        <input type="text" data-field-id="author_11_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_11_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">12</div>
+                        <input type="text" data-field-id="author_12_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_12_papers" placeholder="0">
+                        <input type="text" data-field-id="author_12_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_12_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">13</div>
+                        <input type="text" data-field-id="author_13_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_13_papers" placeholder="0">
+                        <input type="text" data-field-id="author_13_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_13_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">14</div>
+                        <input type="text" data-field-id="author_14_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_14_papers" placeholder="0">
+                        <input type="text" data-field-id="author_14_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_14_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">15</div>
+                        <input type="text" data-field-id="author_15_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_15_papers" placeholder="0">
+                        <input type="text" data-field-id="author_15_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_15_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">16</div>
+                        <input type="text" data-field-id="author_16_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_16_papers" placeholder="0">
+                        <input type="text" data-field-id="author_16_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_16_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">17</div>
+                        <input type="text" data-field-id="author_17_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_17_papers" placeholder="0">
+                        <input type="text" data-field-id="author_17_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_17_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">18</div>
+                        <input type="text" data-field-id="author_18_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_18_papers" placeholder="0">
+                        <input type="text" data-field-id="author_18_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_18_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">19</div>
+                        <input type="text" data-field-id="author_19_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_19_papers" placeholder="0">
+                        <input type="text" data-field-id="author_19_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_19_centrality" placeholder="0.000">
+                    </div>
+                    <div class="ranking-item" data-section="author-analysis">
+                        <div class="rank-number">20</div>
+                        <input type="text" data-field-id="author_20_name" placeholder="作者姓名">
+                        <input type="number" data-field-id="author_20_papers" placeholder="0">
+                        <input type="text" data-field-id="author_20_institution" placeholder="所属机构">
+                        <input type="number" step="0.001" data-field-id="author_20_centrality" placeholder="0.000">
                     </div>
                 </div>
             </div>
@@ -506,6 +935,41 @@
                         <input type="number" step="0.01" data-field-id="burst_5_strength" placeholder="0.00">
                         <input type="number" data-field-id="burst_5_start_year" placeholder="2020">
                         <input type="number" data-field-id="burst_5_duration" placeholder="3">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">6</div>
+                        <input type="text" data-field-id="burst_6_term" placeholder="突现词">
+                        <input type="number" step="0.01" data-field-id="burst_6_strength" placeholder="0.00">
+                        <input type="number" data-field-id="burst_6_start_year" placeholder="2020">
+                        <input type="number" data-field-id="burst_6_duration" placeholder="3">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">7</div>
+                        <input type="text" data-field-id="burst_7_term" placeholder="突现词">
+                        <input type="number" step="0.01" data-field-id="burst_7_strength" placeholder="0.00">
+                        <input type="number" data-field-id="burst_7_start_year" placeholder="2020">
+                        <input type="number" data-field-id="burst_7_duration" placeholder="3">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">8</div>
+                        <input type="text" data-field-id="burst_8_term" placeholder="突现词">
+                        <input type="number" step="0.01" data-field-id="burst_8_strength" placeholder="0.00">
+                        <input type="number" data-field-id="burst_8_start_year" placeholder="2020">
+                        <input type="number" data-field-id="burst_8_duration" placeholder="3">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">9</div>
+                        <input type="text" data-field-id="burst_9_term" placeholder="突现词">
+                        <input type="number" step="0.01" data-field-id="burst_9_strength" placeholder="0.00">
+                        <input type="number" data-field-id="burst_9_start_year" placeholder="2020">
+                        <input type="number" data-field-id="burst_9_duration" placeholder="3">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">10</div>
+                        <input type="text" data-field-id="burst_10_term" placeholder="突现词">
+                        <input type="number" step="0.01" data-field-id="burst_10_strength" placeholder="0.00">
+                        <input type="number" data-field-id="burst_10_start_year" placeholder="2020">
+                        <input type="number" data-field-id="burst_10_duration" placeholder="3">
                     </div>
                 </div>
             </div>
@@ -640,6 +1104,76 @@
                         <input type="number" data-field-id="keyword_10_frequency" placeholder="0">
                         <input type="number" step="0.001" data-field-id="keyword_10_centrality" placeholder="0.000">
                         <input type="number" data-field-id="keyword_10_first_year" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">11</div>
+                        <input type="text" data-field-id="keyword_11_term" placeholder="关键词">
+                        <input type="number" data-field-id="keyword_11_frequency" placeholder="0">
+                        <input type="number" step="0.001" data-field-id="keyword_11_centrality" placeholder="0.000">
+                        <input type="number" data-field-id="keyword_11_first_year" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">12</div>
+                        <input type="text" data-field-id="keyword_12_term" placeholder="关键词">
+                        <input type="number" data-field-id="keyword_12_frequency" placeholder="0">
+                        <input type="number" step="0.001" data-field-id="keyword_12_centrality" placeholder="0.000">
+                        <input type="number" data-field-id="keyword_12_first_year" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">13</div>
+                        <input type="text" data-field-id="keyword_13_term" placeholder="关键词">
+                        <input type="number" data-field-id="keyword_13_frequency" placeholder="0">
+                        <input type="number" step="0.001" data-field-id="keyword_13_centrality" placeholder="0.000">
+                        <input type="number" data-field-id="keyword_13_first_year" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">14</div>
+                        <input type="text" data-field-id="keyword_14_term" placeholder="关键词">
+                        <input type="number" data-field-id="keyword_14_frequency" placeholder="0">
+                        <input type="number" step="0.001" data-field-id="keyword_14_centrality" placeholder="0.000">
+                        <input type="number" data-field-id="keyword_14_first_year" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">15</div>
+                        <input type="text" data-field-id="keyword_15_term" placeholder="关键词">
+                        <input type="number" data-field-id="keyword_15_frequency" placeholder="0">
+                        <input type="number" step="0.001" data-field-id="keyword_15_centrality" placeholder="0.000">
+                        <input type="number" data-field-id="keyword_15_first_year" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">16</div>
+                        <input type="text" data-field-id="keyword_16_term" placeholder="关键词">
+                        <input type="number" data-field-id="keyword_16_frequency" placeholder="0">
+                        <input type="number" step="0.001" data-field-id="keyword_16_centrality" placeholder="0.000">
+                        <input type="number" data-field-id="keyword_16_first_year" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">17</div>
+                        <input type="text" data-field-id="keyword_17_term" placeholder="关键词">
+                        <input type="number" data-field-id="keyword_17_frequency" placeholder="0">
+                        <input type="number" step="0.001" data-field-id="keyword_17_centrality" placeholder="0.000">
+                        <input type="number" data-field-id="keyword_17_first_year" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">18</div>
+                        <input type="text" data-field-id="keyword_18_term" placeholder="关键词">
+                        <input type="number" data-field-id="keyword_18_frequency" placeholder="0">
+                        <input type="number" step="0.001" data-field-id="keyword_18_centrality" placeholder="0.000">
+                        <input type="number" data-field-id="keyword_18_first_year" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">19</div>
+                        <input type="text" data-field-id="keyword_19_term" placeholder="关键词">
+                        <input type="number" data-field-id="keyword_19_frequency" placeholder="0">
+                        <input type="number" step="0.001" data-field-id="keyword_19_centrality" placeholder="0.000">
+                        <input type="number" data-field-id="keyword_19_first_year" placeholder="2010">
+                    </div>
+                    <div class="ranking-item">
+                        <div class="rank-number">20</div>
+                        <input type="text" data-field-id="keyword_20_term" placeholder="关键词">
+                        <input type="number" data-field-id="keyword_20_frequency" placeholder="0">
+                        <input type="number" step="0.001" data-field-id="keyword_20_centrality" placeholder="0.000">
+                        <input type="number" data-field-id="keyword_20_first_year" placeholder="2010">
                     </div>
                 </div>
             </div>
