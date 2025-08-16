@@ -77,6 +77,32 @@ function resetCaptureState() {
         window.uploadedImages = [];
     }
     
+    // 清除初始化标记和事件监听器
+    const textarea = document.getElementById('textCaptureTextarea');
+    if (textarea && textarea.dataset.imagePasteInitialized === 'true') {
+        // 移除事件监听器
+        textarea.removeEventListener('paste', textarea._pasteHandler);
+        textarea.removeEventListener('dragover', textarea._dragoverHandler);
+        textarea.removeEventListener('dragleave', textarea._dragleaveHandler);
+        textarea.removeEventListener('drop', textarea._dropHandler);
+        
+        // 清除事件处理函数引用
+        delete textarea._pasteHandler;
+        delete textarea._dragoverHandler;
+        delete textarea._dragleaveHandler;
+        delete textarea._dropHandler;
+        
+        // 清除初始化标记
+        delete textarea.dataset.imagePasteInitialized;
+    }
+    
+    // 清除文件输入框的事件监听器
+    const fileInput = document.getElementById('imageUploadInput');
+    if (fileInput && fileInput._changeHandler) {
+        fileInput.removeEventListener('change', fileInput._changeHandler);
+        delete fileInput._changeHandler;
+    }
+    
     console.log('采集状态已重置，所有图片已清空');
 }
 
@@ -160,8 +186,21 @@ function initializeImagePaste() {
     
     if (!textarea || !previewContainer || !fileInput) return;
     
-    // 监听粘贴事件
-    textarea.addEventListener('paste', async (e) => {
+    // 如果已经初始化过，先移除旧的事件监听器
+    if (textarea.dataset.imagePasteInitialized === 'true') {
+        // 移除旧的事件监听器
+        textarea.removeEventListener('paste', textarea._pasteHandler);
+        textarea.removeEventListener('dragover', textarea._dragoverHandler);
+        textarea.removeEventListener('dragleave', textarea._dragleaveHandler);
+        textarea.removeEventListener('drop', textarea._dropHandler);
+        fileInput.removeEventListener('change', fileInput._changeHandler);
+    }
+    
+    // 标记已初始化
+    textarea.dataset.imagePasteInitialized = 'true';
+    
+    // 定义事件处理函数并保存引用
+    textarea._pasteHandler = async (e) => {
         const items = (e.clipboardData || e.originalEvent.clipboardData).items;
         
         for (let i = 0; i < items.length; i++) {
@@ -186,21 +225,20 @@ function initializeImagePaste() {
                 }
             }
         }
-    });
+    };
     
-    // 监听拖拽事件
-    textarea.addEventListener('dragover', (e) => {
+    textarea._dragoverHandler = (e) => {
         e.preventDefault();
         textarea.style.borderColor = '#1890ff';
         textarea.style.backgroundColor = '#f0f8ff';
-    });
+    };
     
-    textarea.addEventListener('dragleave', () => {
+    textarea._dragleaveHandler = () => {
         textarea.style.borderColor = '#e1e5e9';
         textarea.style.backgroundColor = 'white';
-    });
+    };
     
-    textarea.addEventListener('drop', async (e) => {
+    textarea._dropHandler = async (e) => {
         e.preventDefault();
         textarea.style.borderColor = '#e1e5e9';
         textarea.style.backgroundColor = 'white';
@@ -224,10 +262,9 @@ function initializeImagePaste() {
                 fileInput.files = dataTransfer.files;
             }
         }
-    });
+    };
     
-    // 监听文件选择事件
-    fileInput.addEventListener('change', async (e) => {
+    fileInput._changeHandler = async (e) => {
         const files = e.target.files;
         
         for (let i = 0; i < files.length; i++) {
@@ -240,7 +277,14 @@ function initializeImagePaste() {
                 // fileInput.files已经包含了选中的文件
             }
         }
-    });
+    };
+    
+    // 绑定事件监听器
+    textarea.addEventListener('paste', textarea._pasteHandler);
+    textarea.addEventListener('dragover', textarea._dragoverHandler);
+    textarea.addEventListener('dragleave', textarea._dragleaveHandler);
+    textarea.addEventListener('drop', textarea._dropHandler);
+    fileInput.addEventListener('change', fileInput._changeHandler);
 }
 
 // 显示图片预览
@@ -255,6 +299,19 @@ async function displayImagePreview(file) {
     if (file.size > maxSize) {
         showToast('图片文件过大，请选择小于10MB的图片', 'warning');
         return;
+    }
+    
+    // 检查是否已经存在相同的图片（基于文件名和大小）
+    const imagePreviewsContainer = document.getElementById('imagePreviewsContainer');
+    if (imagePreviewsContainer) {
+        const existingImages = imagePreviewsContainer.querySelectorAll('div[id^="image-"]');
+        for (let existingImage of existingImages) {
+            const imageInfo = existingImage.nextSibling;
+            if (imageInfo && imageInfo.innerHTML.includes(file.name)) {
+                showToast('该图片已存在，请勿重复添加', 'warning');
+                return;
+            }
+        }
     }
     
     // 转换图片为JPG格式
@@ -295,7 +352,6 @@ async function displayImagePreview(file) {
     `;
     
     // 将新图片预览元素添加到容器中
-    const imagePreviewsContainer = document.getElementById('imagePreviewsContainer');
     if (imagePreviewsContainer) {
         imagePreviewsContainer.appendChild(imagePreviewElement);
     }

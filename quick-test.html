@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速测试 - 年发文量趋势分析</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .result {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        button {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>快速测试 - 年发文量趋势分析</h1>
+    
+    <div class="test-section">
+        <h2>1. 基础配置检查</h2>
+        <button onclick="checkConfig()">检查配置</button>
+        <div id="configResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. 模块映射测试</h2>
+        <button onclick="testModuleMapping()">测试模块映射</button>
+        <div id="mappingResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. 提示词测试</h2>
+        <button onclick="testPrompt()">测试提示词</button>
+        <div id="promptResult" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. 模拟AI调用</h2>
+        <button onclick="simulateAICall()">模拟AI调用</button>
+        <div id="aiResult" class="result"></div>
+    </div>
+
+    <!-- 引入必要的脚本 -->
+    <script src="config.js"></script>
+    <script src="prompts/temporal-evolution-prompts.js"></script>
+    <script src="prompts/index.js"></script>
+    <script src="ai-core.js"></script>
+    <script src="result-display.js"></script>
+    
+    <script>
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            return `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+        }
+        
+        function checkConfig() {
+            const container = document.getElementById('configResult');
+            let result = '';
+            
+            try {
+                result += log('检查基础配置...', 'info');
+                
+                // 检查API配置
+                if (typeof API_KEYS !== 'undefined') {
+                    result += log('✓ API_KEYS 已定义', 'success');
+                    result += log(`豆包API Key: ${API_KEYS.doubao ? '已配置' : '未配置'}`, 'info');
+                    result += log(`DeepSeek API Key: ${API_KEYS.deepseek ? '已配置' : '未配置'}`, 'info');
+                } else {
+                    result += log('✗ API_KEYS 未定义', 'error');
+                }
+                
+                // 检查当前配置
+                if (typeof CURRENT_CONFIG !== 'undefined') {
+                    result += log('✓ CURRENT_CONFIG 已定义', 'success');
+                    result += log(`当前提供商: ${CURRENT_CONFIG.provider}`, 'info');
+                    result += log(`当前模型: ${CURRENT_CONFIG.model}`, 'info');
+                } else {
+                    result += log('✗ CURRENT_CONFIG 未定义', 'error');
+                }
+                
+                // 检查函数
+                if (typeof getCurrentModel === 'function') {
+                    result += log('✓ getCurrentModel 函数可用', 'success');
+                    const model = getCurrentModel();
+                    result += log(`获取到的模型: ${model}`, 'info');
+                } else {
+                    result += log('✗ getCurrentModel 函数不可用', 'error');
+                }
+                
+            } catch (error) {
+                result += log(`配置检查失败: ${error.message}`, 'error');
+            }
+            
+            container.textContent = result;
+        }
+        
+        function testModuleMapping() {
+            const container = document.getElementById('mappingResult');
+            let result = '';
+            
+            try {
+                result += log('测试模块映射...', 'info');
+                
+                // 测试模块名称获取
+                const descriptor = { title: '年发文量趋势分析' };
+                const moduleName = getModuleNameFromDescriptor(descriptor);
+                result += log(`模块名称: ${moduleName}`, 'info');
+                
+                if (moduleName === 'temporal-evolution') {
+                    result += log('✓ 模块映射正确', 'success');
+                } else {
+                    result += log(`✗ 模块映射错误，期望 temporal-evolution，实际 ${moduleName}`, 'error');
+                }
+                
+                // 检查提示词映射
+                const prompt = getModulePrompt(moduleName);
+                if (prompt) {
+                    result += log('✓ 提示词获取成功', 'success');
+                } else {
+                    result += log('✗ 提示词获取失败', 'error');
+                }
+                
+            } catch (error) {
+                result += log(`模块映射测试失败: ${error.message}`, 'error');
+            }
+            
+            container.textContent = result;
+        }
+        
+        function testPrompt() {
+            const container = document.getElementById('promptResult');
+            let result = '';
+            
+            try {
+                result += log('测试提示词...', 'info');
+                
+                const prompt = getModulePrompt('temporal-evolution');
+                if (prompt) {
+                    result += log('✓ 提示词存在', 'success');
+                    result += log('提示词内容预览:', 'info');
+                    result += prompt.substring(0, 300) + '...\n';
+                    
+                    // 检查关键字段
+                    const requiredFields = ['startup_period', 'growth_period', 'burst_period', 'maturity_period'];
+                    for (const field of requiredFields) {
+                        if (prompt.includes(field)) {
+                            result += log(`✓ 包含字段: ${field}`, 'success');
+                        } else {
+                            result += log(`✗ 缺少字段: ${field}`, 'error');
+                        }
+                    }
+                } else {
+                    result += log('✗ 提示词不存在', 'error');
+                }
+                
+            } catch (error) {
+                result += log(`提示词测试失败: ${error.message}`, 'error');
+            }
+            
+            container.textContent = result;
+        }
+        
+        function simulateAICall() {
+            const container = document.getElementById('aiResult');
+            let result = '';
+            
+            try {
+                result += log('模拟AI调用...', 'info');
+                
+                // 模拟AI返回的数据
+                const mockData = {
+                    "startup_period": "2010-2015",
+                    "startup_papers": 25,
+                    "growth_period": "2016-2020",
+                    "growth_papers": 45,
+                    "burst_period": "2021-2024",
+                    "burst_papers": 80,
+                    "maturity_period": "2023-2024",
+                    "maturity_papers": 90,
+                    "peak_year": 2023,
+                    "peak_papers": 95,
+                    "trough_year": 2010,
+                    "trough_papers": 5,
+                    "overall_growth_rate": 1800,
+                    "recent_5yr_growth_rate": 100
+                };
+                
+                result += log('模拟AI返回数据:', 'info');
+                result += JSON.stringify(mockData, null, 2) + '\n';
+                
+                // 模拟表单字段描述符
+                const descriptor = {
+                    title: '年发文量趋势分析',
+                    fields: [
+                        { fieldId: 'startup_period', label: '起步期时间段' },
+                        { fieldId: 'startup_papers', label: '起步期年均发文量' },
+                        { fieldId: 'growth_period', label: '成长期时间段' },
+                        { fieldId: 'growth_papers', label: '成长期年均发文量' },
+                        { fieldId: 'burst_period', label: '爆发期时间段' },
+                        { fieldId: 'burst_papers', label: '爆发期年均发文量' },
+                        { fieldId: 'maturity_period', label: '成熟期时间段' },
+                        { fieldId: 'maturity_papers', label: '成熟期年均发文量' },
+                        { fieldId: 'peak_year', label: '峰值年份' },
+                        { fieldId: 'peak_papers', label: '峰值发文量' },
+                        { fieldId: 'trough_year', label: '最低谷年份' },
+                        { fieldId: 'trough_papers', label: '最低谷发文量' },
+                        { fieldId: 'overall_growth_rate', label: '总体增长率(%)' },
+                        { fieldId: 'recent_5yr_growth_rate', label: '近5年增长率(%)' }
+                    ]
+                };
+                
+                // 检查数据匹配
+                const validFields = descriptor.fields.filter(f => mockData[f.fieldId] !== undefined);
+                result += log(`有效字段数: ${validFields.length}/${descriptor.fields.length}`, 'info');
+                
+                if (validFields.length === descriptor.fields.length) {
+                    result += log('✓ 所有字段都能匹配', 'success');
+                } else {
+                    const missingFields = descriptor.fields.filter(f => mockData[f.fieldId] === undefined);
+                    result += log(`✗ 缺少字段: ${missingFields.map(f => f.fieldId).join(', ')}`, 'error');
+                }
+                
+                // 模拟显示结果
+                if (typeof displayCaptureResults === 'function') {
+                    result += log('✓ displayCaptureResults 函数可用', 'success');
+                    // 这里可以调用 displayCaptureResults 来测试显示功能
+                } else {
+                    result += log('✗ displayCaptureResults 函数不可用', 'error');
+                }
+                
+            } catch (error) {
+                result += log(`模拟AI调用失败: ${error.message}`, 'error');
+            }
+            
+            container.textContent = result;
+        }
+        
+        // 页面加载完成后自动运行基础检查
+        window.addEventListener('load', () => {
+            setTimeout(checkConfig, 1000);
+        });
+    </script>
+</body>
+</html>

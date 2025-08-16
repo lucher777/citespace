@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>年发文量趋势分析调试工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .debug-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .debug-result {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+        .warning { color: orange; }
+        .info { color: blue; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .test-input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>年发文量趋势分析调试工具</h1>
+    
+    <div class="debug-section">
+        <h2>1. 基础检查</h2>
+        <button onclick="runBasicChecks()">运行基础检查</button>
+        <div id="basicChecks" class="debug-result"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>2. 模块映射检查</h2>
+        <button onclick="checkModuleMapping()">检查模块映射</button>
+        <div id="moduleMappingCheck" class="debug-result"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>3. 提示词检查</h2>
+        <button onclick="checkPrompts()">检查提示词</button>
+        <div id="promptCheck" class="debug-result"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>4. 字段映射检查</h2>
+        <button onclick="checkFieldMapping()">检查字段映射</button>
+        <div id="fieldMappingCheck" class="debug-result"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>5. 模拟分析测试</h2>
+        <textarea id="testText" class="test-input" placeholder="输入测试文本或图片描述" rows="4">这是一张年发文量趋势图，显示了从2010年到2024年的发文量变化。起步期2010-2015年，年均发文量25篇；成长期2016-2020年，年均发文量45篇；爆发期2021-2024年，年均发文量80篇；成熟期2023-2024年，年均发文量90篇。峰值出现在2023年，发文量95篇；最低谷在2010年，发文量5篇。总体增长率1800%，近5年增长率100%。</textarea>
+        <button onclick="simulateAnalysis()">模拟分析</button>
+        <div id="simulationResult" class="debug-result"></div>
+    </div>
+    
+    <div class="debug-section">
+        <h2>6. 完整诊断</h2>
+        <button onclick="runFullDiagnosis()">运行完整诊断</button>
+        <div id="fullDiagnosis" class="debug-result"></div>
+    </div>
+
+    <!-- 引入必要的脚本 -->
+    <script src="prompts/temporal-evolution-prompts.js"></script>
+    <script src="prompts/index.js"></script>
+    <script src="ai-core.js"></script>
+    <script src="result-display.js"></script>
+    
+    <script>
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            return `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+        }
+        
+        function runBasicChecks() {
+            const container = document.getElementById('basicChecks');
+            let result = '';
+            
+            try {
+                // 检查全局变量
+                result += log('开始基础检查...', 'info');
+                
+                if (typeof window.PUBLICATION_EVOLUTION_PROMPT !== 'undefined') {
+                    result += log('✓ PUBLICATION_EVOLUTION_PROMPT 已定义', 'success');
+                } else {
+                    result += log('✗ PUBLICATION_EVOLUTION_PROMPT 未定义', 'error');
+                }
+                
+                if (typeof window.getModulePrompt === 'function') {
+                    result += log('✓ getModulePrompt 函数可用', 'success');
+                } else {
+                    result += log('✗ getModulePrompt 函数不可用', 'error');
+                }
+                
+                if (typeof window.getModuleNameFromDescriptor === 'function') {
+                    result += log('✓ getModuleNameFromDescriptor 函数可用', 'success');
+                } else {
+                    result += log('✗ getModuleNameFromDescriptor 函数不可用', 'error');
+                }
+                
+                if (typeof window.PROMPT_MAPPING !== 'undefined') {
+                    result += log('✓ PROMPT_MAPPING 已定义', 'success');
+                } else {
+                    result += log('✗ PROMPT_MAPPING 未定义', 'error');
+                }
+                
+                if (typeof window.MODULE_INFO !== 'undefined') {
+                    result += log('✓ MODULE_INFO 已定义', 'success');
+                } else {
+                    result += log('✗ MODULE_INFO 未定义', 'error');
+                }
+                
+            } catch (error) {
+                result += log(`基础检查失败: ${error.message}`, 'error');
+            }
+            
+            container.textContent = result;
+        }
+        
+        function checkModuleMapping() {
+            const container = document.getElementById('moduleMappingCheck');
+            let result = '';
+            
+            try {
+                result += log('检查模块映射...', 'info');
+                
+                // 测试模块名称获取
+                const descriptor = { title: '年发文量趋势分析' };
+                const moduleName = getModuleNameFromDescriptor(descriptor);
+                result += log(`模块名称: ${moduleName}`, 'info');
+                
+                if (moduleName === 'temporal-evolution') {
+                    result += log('✓ 模块映射正确', 'success');
+                } else {
+                    result += log(`✗ 模块映射错误，期望 temporal-evolution，实际 ${moduleName}`, 'error');
+                }
+                
+                // 检查PROMPT_MAPPING
+                result += log('PROMPT_MAPPING 内容:', 'info');
+                result += JSON.stringify(window.PROMPT_MAPPING, null, 2) + '\n';
+                
+                // 检查MODULE_INFO
+                result += log('MODULE_INFO 中的 temporal-evolution:', 'info');
+                if (window.MODULE_INFO['temporal-evolution']) {
+                    result += JSON.stringify(window.MODULE_INFO['temporal-evolution'], null, 2) + '\n';
+                } else {
+                    result += log('✗ MODULE_INFO 中没有 temporal-evolution 条目', 'error');
+                }
+                
+            } catch (error) {
+                result += log(`模块映射检查失败: ${error.message}`, 'error');
+            }
+            
+            container.textContent = result;
+        }
+        
+        function checkPrompts() {
+            const container = document.getElementById('promptCheck');
+            let result = '';
+            
+            try {
+                result += log('检查提示词...', 'info');
+                
+                const prompt = getModulePrompt('temporal-evolution');
+                if (prompt) {
+                    result += log('✓ 成功获取 temporal-evolution 提示词', 'success');
+                    result += log('提示词内容预览:', 'info');
+                    result += prompt.substring(0, 500) + '...\n';
+                    
+                    // 检查关键字段
+                    const requiredFields = ['startup_period', 'growth_period', 'burst_period', 'maturity_period'];
+                    for (const field of requiredFields) {
+                        if (prompt.includes(field)) {
+                            result += log(`✓ 提示词包含字段: ${field}`, 'success');
+                        } else {
+                            result += log(`✗ 提示词缺少字段: ${field}`, 'error');
+                        }
+                    }
+                } else {
+                    result += log('✗ 无法获取 temporal-evolution 提示词', 'error');
+                }
+                
+            } catch (error) {
+                result += log(`提示词检查失败: ${error.message}`, 'error');
+            }
+            
+            container.textContent = result;
+        }
+        
+        function checkFieldMapping() {
+            const container = document.getElementById('fieldMappingCheck');
+            let result = '';
+            
+            try {
+                result += log('检查字段映射...', 'info');
+                
+                const expectedFields = [
+                    'startup_period', 'startup_papers', 'growth_period', 'growth_papers',
+                    'burst_period', 'burst_papers', 'maturity_period', 'maturity_papers',
+                    'peak_year', 'peak_papers', 'trough_year', 'trough_papers',
+                    'overall_growth_rate', 'recent_5yr_growth_rate'
+                ];
+                
+                const moduleInfo = window.MODULE_INFO['temporal-evolution'];
+                if (moduleInfo) {
+                    const actualFields = moduleInfo.fields;
+                    result += log(`期望字段数: ${expectedFields.length}`, 'info');
+                    result += log(`实际字段数: ${actualFields.length}`, 'info');
+                    
+                    const missingFields = expectedFields.filter(field => !actualFields.includes(field));
+                    const extraFields = actualFields.filter(field => !expectedFields.includes(field));
+                    
+                    if (missingFields.length === 0 && extraFields.length === 0) {
+                        result += log('✓ 字段映射完全匹配', 'success');
+                    } else {
+                        if (missingFields.length > 0) {
+                            result += log(`✗ 缺少字段: ${missingFields.join(', ')}`, 'error');
+                        }
+                        if (extraFields.length > 0) {
+                            result += log(`⚠ 多余字段: ${extraFields.join(', ')}`, 'warning');
+                        }
+                    }
+                } else {
+                    result += log('✗ MODULE_INFO 中没有 temporal-evolution 条目', 'error');
+                }
+                
+            } catch (error) {
+                result += log(`字段映射检查失败: ${error.message}`, 'error');
+            }
+            
+            container.textContent = result;
+        }
+        
+        function simulateAnalysis() {
+            const container = document.getElementById('simulationResult');
+            const testText = document.getElementById('testText').value;
+            let result = '';
+            
+            try {
+                result += log('开始模拟分析...', 'info');
+                result += log(`测试文本: ${testText}`, 'info');
+                
+                // 模拟AI返回的数据
+                const mockData = {
+                    "startup_period": "2010-2015",
+                    "startup_papers": 25,
+                    "growth_period": "2016-2020",
+                    "growth_papers": 45,
+                    "burst_period": "2021-2024",
+                    "burst_papers": 80,
+                    "maturity_period": "2023-2024",
+                    "maturity_papers": 90,
+                    "peak_year": 2023,
+                    "peak_papers": 95,
+                    "trough_year": 2010,
+                    "trough_papers": 5,
+                    "overall_growth_rate": 1800,
+                    "recent_5yr_growth_rate": 100
+                };
+                
+                result += log('模拟AI返回数据:', 'info');
+                result += JSON.stringify(mockData, null, 2) + '\n';
+                
+                // 模拟表单字段描述符
+                const descriptor = {
+                    title: '年发文量趋势分析',
+                    fields: [
+                        { fieldId: 'startup_period', label: '起步期时间段' },
+                        { fieldId: 'startup_papers', label: '起步期年均发文量' },
+                        { fieldId: 'growth_period', label: '成长期时间段' },
+                        { fieldId: 'growth_papers', label: '成长期年均发文量' },
+                        { fieldId: 'burst_period', label: '爆发期时间段' },
+                        { fieldId: 'burst_papers', label: '爆发期年均发文量' },
+                        { fieldId: 'maturity_period', label: '成熟期时间段' },
+                        { fieldId: 'maturity_papers', label: '成熟期年均发文量' },
+                        { fieldId: 'peak_year', label: '峰值年份' },
+                        { fieldId: 'peak_papers', label: '峰值发文量' },
+                        { fieldId: 'trough_year', label: '最低谷年份' },
+                        { fieldId: 'trough_papers', label: '最低谷发文量' },
+                        { fieldId: 'overall_growth_rate', label: '总体增长率(%)' },
+                        { fieldId: 'recent_5yr_growth_rate', label: '近5年增长率(%)' }
+                    ]
+                };
+                
+                // 检查数据匹配
+                const validFields = descriptor.fields.filter(f => mockData[f.fieldId] !== undefined);
+                result += log(`有效字段数: ${validFields.length}/${descriptor.fields.length}`, 'info');
+                
+                if (validFields.length === descriptor.fields.length) {
+                    result += log('✓ 所有字段都能匹配', 'success');
+                } else {
+                    const missingFields = descriptor.fields.filter(f => mockData[f.fieldId] === undefined);
+                    result += log(`✗ 缺少字段: ${missingFields.map(f => f.fieldId).join(', ')}`, 'error');
+                }
+                
+            } catch (error) {
+                result += log(`模拟分析失败: ${error.message}`, 'error');
+            }
+            
+            container.textContent = result;
+        }
+        
+        function runFullDiagnosis() {
+            const container = document.getElementById('fullDiagnosis');
+            let result = '';
+            
+            try {
+                result += log('开始完整诊断...', 'info');
+                
+                // 1. 检查所有必要的全局变量
+                const requiredGlobals = [
+                    'PUBLICATION_EVOLUTION_PROMPT',
+                    'getModulePrompt',
+                    'getModuleNameFromDescriptor',
+                    'PROMPT_MAPPING',
+                    'MODULE_INFO'
+                ];
+                
+                for (const global of requiredGlobals) {
+                    if (typeof window[global] !== 'undefined') {
+                        result += log(`✓ ${global} 已定义`, 'success');
+                    } else {
+                        result += log(`✗ ${global} 未定义`, 'error');
+                    }
+                }
+                
+                // 2. 检查模块映射
+                const descriptor = { title: '年发文量趋势分析' };
+                const moduleName = getModuleNameFromDescriptor(descriptor);
+                result += log(`模块名称: ${moduleName}`, 'info');
+                
+                // 3. 检查提示词
+                const prompt = getModulePrompt(moduleName);
+                if (prompt) {
+                    result += log('✓ 提示词获取成功', 'success');
+                } else {
+                    result += log('✗ 提示词获取失败', 'error');
+                }
+                
+                // 4. 检查字段映射
+                const moduleInfo = window.MODULE_INFO[moduleName];
+                if (moduleInfo) {
+                    result += log(`✓ 模块信息获取成功，字段数: ${moduleInfo.fields.length}`, 'success');
+                } else {
+                    result += log('✗ 模块信息获取失败', 'error');
+                }
+                
+                // 5. 总结
+                result += log('诊断完成', 'info');
+                
+            } catch (error) {
+                result += log(`完整诊断失败: ${error.message}`, 'error');
+            }
+            
+            container.textContent = result;
+        }
+        
+        // 页面加载完成后自动运行基础检查
+        window.addEventListener('load', () => {
+            setTimeout(runBasicChecks, 1000);
+        });
+    </script>
+</body>
+</html>

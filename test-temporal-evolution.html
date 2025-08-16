@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>年发文量趋势分析测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-result {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+        }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>年发文量趋势分析模块测试</h1>
+    
+    <div class="test-section">
+        <h2>测试1: 模块映射检查</h2>
+        <div id="moduleMappingTest" class="test-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>测试2: 提示词检查</h2>
+        <div id="promptTest" class="test-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>测试3: 字段映射检查</h2>
+        <div id="fieldMappingTest" class="test-result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>测试4: 模拟数据测试</h2>
+        <div id="dataTest" class="test-result"></div>
+    </div>
+
+    <!-- 引入必要的脚本 -->
+    <script src="prompts/temporal-evolution-prompts.js"></script>
+    <script src="prompts/index.js"></script>
+    <script src="ai-core.js"></script>
+    <script src="result-display.js"></script>
+    
+    <script>
+        // 测试函数
+        function runTests() {
+            testModuleMapping();
+            testPrompt();
+            testFieldMapping();
+            testDataProcessing();
+        }
+        
+        function testModuleMapping() {
+            const container = document.getElementById('moduleMappingTest');
+            try {
+                // 测试模块名称获取
+                const descriptor = { title: '年发文量趋势分析' };
+                const moduleName = getModuleNameFromDescriptor(descriptor);
+                
+                if (moduleName === 'temporal-evolution') {
+                    container.innerHTML = '<span class="success">✓ 模块映射正确: 年发文量趋势分析 -> temporal-evolution</span>';
+                } else {
+                    container.innerHTML = `<span class="error">✗ 模块映射错误: 期望 temporal-evolution，实际 ${moduleName}</span>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<span class="error">✗ 模块映射测试失败: ${error.message}</span>`;
+            }
+        }
+        
+        function testPrompt() {
+            const container = document.getElementById('promptTest');
+            try {
+                const prompt = getModulePrompt('temporal-evolution');
+                
+                if (prompt && prompt.includes('startup_period') && prompt.includes('growth_period')) {
+                    container.innerHTML = '<span class="success">✓ 提示词正确: 包含正确的字段名</span>';
+                } else {
+                    container.innerHTML = '<span class="error">✗ 提示词错误: 字段名不匹配</span>';
+                }
+            } catch (error) {
+                container.innerHTML = `<span class="error">✗ 提示词测试失败: ${error.message}</span>`;
+            }
+        }
+        
+        function testFieldMapping() {
+            const container = document.getElementById('fieldMappingTest');
+            try {
+                // 检查字段映射
+                const expectedFields = [
+                    'startup_period', 'startup_papers', 'growth_period', 'growth_papers',
+                    'burst_period', 'burst_papers', 'maturity_period', 'maturity_papers',
+                    'peak_year', 'peak_papers', 'trough_year', 'trough_papers',
+                    'overall_growth_rate', 'recent_5yr_growth_rate'
+                ];
+                
+                const moduleInfo = MODULE_INFO['temporal-evolution'];
+                const actualFields = moduleInfo.fields;
+                
+                const missingFields = expectedFields.filter(field => !actualFields.includes(field));
+                const extraFields = actualFields.filter(field => !expectedFields.includes(field));
+                
+                if (missingFields.length === 0 && extraFields.length === 0) {
+                    container.innerHTML = '<span class="success">✓ 字段映射正确: 所有字段都匹配</span>';
+                } else {
+                    container.innerHTML = `<span class="error">✗ 字段映射错误: 缺少 ${missingFields.join(', ')}，多余 ${extraFields.join(', ')}</span>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<span class="error">✗ 字段映射测试失败: ${error.message}</span>`;
+            }
+        }
+        
+        function testDataProcessing() {
+            const container = document.getElementById('dataTest');
+            try {
+                // 模拟AI返回的数据
+                const mockData = {
+                    "startup_period": "2010-2015",
+                    "startup_papers": 25,
+                    "growth_period": "2016-2020",
+                    "growth_papers": 45,
+                    "burst_period": "2021-2024",
+                    "burst_papers": 80,
+                    "maturity_period": "2023-2024",
+                    "maturity_papers": 90,
+                    "peak_year": 2023,
+                    "peak_papers": 95,
+                    "trough_year": 2010,
+                    "trough_papers": 5,
+                    "overall_growth_rate": 1800,
+                    "recent_5yr_growth_rate": 100
+                };
+                
+                // 模拟表单字段描述符
+                const descriptor = {
+                    title: '年发文量趋势分析',
+                    fields: [
+                        { fieldId: 'startup_period', label: '起步期时间段' },
+                        { fieldId: 'startup_papers', label: '起步期年均发文量' },
+                        { fieldId: 'growth_period', label: '成长期时间段' },
+                        { fieldId: 'growth_papers', label: '成长期年均发文量' },
+                        { fieldId: 'burst_period', label: '爆发期时间段' },
+                        { fieldId: 'burst_papers', label: '爆发期年均发文量' },
+                        { fieldId: 'maturity_period', label: '成熟期时间段' },
+                        { fieldId: 'maturity_papers', label: '成熟期年均发文量' },
+                        { fieldId: 'peak_year', label: '峰值年份' },
+                        { fieldId: 'peak_papers', label: '峰值发文量' },
+                        { fieldId: 'trough_year', label: '最低谷年份' },
+                        { fieldId: 'trough_papers', label: '最低谷发文量' },
+                        { fieldId: 'overall_growth_rate', label: '总体增长率(%)' },
+                        { fieldId: 'recent_5yr_growth_rate', label: '近5年增长率(%)' }
+                    ]
+                };
+                
+                // 检查数据匹配
+                const validFields = descriptor.fields.filter(f => mockData[f.fieldId] !== undefined);
+                
+                if (validFields.length === descriptor.fields.length) {
+                    container.innerHTML = '<span class="success">✓ 数据处理正确: 所有字段都能匹配</span>';
+                } else {
+                    const missingFields = descriptor.fields.filter(f => mockData[f.fieldId] === undefined);
+                    container.innerHTML = `<span class="error">✗ 数据处理错误: 缺少字段 ${missingFields.map(f => f.fieldId).join(', ')}</span>`;
+                }
+            } catch (error) {
+                container.innerHTML = `<span class="error">✗ 数据处理测试失败: ${error.message}</span>`;
+            }
+        }
+        
+        // 页面加载完成后运行测试
+        window.addEventListener('load', runTests);
+    </script>
+</body>
+</html>

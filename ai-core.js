@@ -1,15 +1,58 @@
 // AI分析核心模块
 // 负责AI模型调用和基础分析功能
 
+// 根据descriptor获取模块名称的函数
+function getModuleNameFromDescriptor(descriptor) {
+    const title = descriptor.title || '';
+    
+    // 模块名称映射表
+    const moduleMapping = {
+        '数据检索基础信息': 'data-retrieval',
+        '年发文量趋势分析': 'temporal-evolution',
+        '国家/地区分布': 'country-distribution',
+        '期刊分布': 'journal-distribution',
+        '机构分布': 'institution-distribution',
+        '作者分析': 'author-analysis',
+        '突现词分析': 'burst-analysis',
+        '聚类分析': 'cluster-analysis',
+        '关键词分析': 'keyword-analysis',
+        '时间演化分析': 'time-evolution',
+        '核心引文': 'core-citations',
+        '网络拓扑特征': 'network-topology',
+        '引用模式分析': 'citation-pattern',
+        '数据质量与可靠性': 'data-quality'
+    };
+    
+    // 根据标题匹配模块
+    for (const [chineseName, moduleName] of Object.entries(moduleMapping)) {
+        if (title.includes(chineseName)) {
+            return moduleName;
+        }
+    }
+    
+    // 如果没有匹配到，返回默认模块
+    return 'data-retrieval';
+}
+
 async function analyzeSectionInModal(textInput, imageFile, descriptor, targetSection) {
     const startTime = Date.now();
     
     // 使用config.js中的API配置
+    if (typeof API_CONFIG === 'undefined') {
+        throw new Error('API_CONFIG 未定义，请检查 config.js 是否正确加载');
+    }
+    
     const apiKey = API_CONFIG.getStoredApiKey();
     
     if (!apiKey) {
         throw new Error('请在config.js中配置API密钥');
     }
+    
+    console.log('=== API配置检查 ===');
+    console.log('API_CONFIG 状态:', typeof API_CONFIG);
+    console.log('当前提供商:', API_CONFIG.CURRENT_CONFIG.provider);
+    console.log('API密钥状态:', apiKey ? '已配置' : '未配置');
+    console.log('==================');
     
     const container = document.getElementById('captureResultsContainer');
     
@@ -36,7 +79,30 @@ async function analyzeSectionInModal(textInput, imageFile, descriptor, targetSec
     
     // 构建系统提示词
     const fieldsList = descriptor.fields.map(f => `- fieldId=${f.fieldId} | label=${f.label} | type=${f.type} | placeholder=${f.placeholder} | name=${f.name} | id=${f.idAttr}`).join('\n');
-    const systemPrompt = CITESPACE_ANALYSIS_PROMPT
+    
+    // 根据模块名称获取对应的prompt
+    let modulePrompt = CITESPACE_ANALYSIS_PROMPT; // 默认使用数据检索的prompt
+    
+    // 尝试根据模块名称获取对应的prompt
+    if (typeof getModulePrompt === 'function') {
+        const moduleName = getModuleNameFromDescriptor(descriptor);
+        console.log('=== 模块映射调试 ===');
+        console.log('描述符标题:', descriptor.title);
+        console.log('映射的模块名称:', moduleName);
+        
+        const specificPrompt = getModulePrompt(moduleName);
+        if (specificPrompt) {
+            modulePrompt = specificPrompt;
+            console.log(`✓ 使用模块 "${moduleName}" 的专用prompt`);
+        } else {
+            console.log(`✗ 未找到模块 "${moduleName}" 的专用prompt，使用默认prompt`);
+        }
+        console.log('==================');
+    } else {
+        console.log('✗ getModulePrompt 函数不可用');
+    }
+    
+    const systemPrompt = modulePrompt
         .replace('{descriptorTitle}', descriptor.title)
         .replace('{fieldsList}', fieldsList);
     
@@ -90,7 +156,7 @@ async function analyzeSectionInModal(textInput, imageFile, descriptor, targetSec
                 ]
             };
         } else if (currentProvider === 'deepseek') {
-            // DeepSeek格式：使用base64格式
+            // DeepSeek格式：使用标准格式，image_url在前，text在后
             const base64Image = await new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.onload = e => resolve(e.target.result.split(',')[1]);
@@ -100,12 +166,20 @@ async function analyzeSectionInModal(textInput, imageFile, descriptor, targetSec
             imageContent = {
                 role: 'user',
                 content: [
-                    { type: 'text', text: textInput || '请分析这张图片中的数据，提取出表格、图表或文字中的相关信息' },
-                    { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Image}` } }
+                    {
+                        type: 'image_url',
+                        image_url: {
+                            url: `data:image/jpeg;base64,${base64Image}`
+                        }
+                    },
+                    {
+                        type: 'text',
+                        text: textInput || '请分析这张图片中的数据，提取出表格、图表或文字中的相关信息'
+                    }
                 ]
             };
         } else {
-            // 默认格式
+            // 默认格式：使用标准格式，image_url在前，text在后
             const base64Image = await new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.onload = e => resolve(e.target.result.split(',')[1]);
@@ -115,8 +189,16 @@ async function analyzeSectionInModal(textInput, imageFile, descriptor, targetSec
             imageContent = {
                 role: 'user',
                 content: [
-                    { type: 'text', text: textInput || '请分析这张图片中的数据，提取出表格、图表或文字中的相关信息' },
-                    { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${base64Image}` } }
+                    {
+                        type: 'image_url',
+                        image_url: {
+                            url: `data:image/jpeg;base64,${base64Image}`
+                        }
+                    },
+                    {
+                        type: 'text',
+                        text: textInput || '请分析这张图片中的数据，提取出表格、图表或文字中的相关信息'
+                    }
                 ]
             };
         }

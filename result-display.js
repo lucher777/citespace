@@ -149,16 +149,21 @@ function displayCaptureResults(extractedData, descriptor, targetSection, rawText
             'node_threshold': ['阈值', '节点', 'threshold', '节点阈值', '选择标准', '筛选条件'],
             'pruning_method': ['剪枝', '网络', '方法', 'pruning', 'pathfinder', 'mst', '网络剪枝', '修剪方法'],
         
-            // 年发文量趋势
-            'start_period': ['起步期', '初期', '开始阶段', 'start', 'initial period'],
-            'growth_period': ['成长期', '发展阶段', 'growth', 'development period'],
-            'explosive_period': ['爆发期', '快速增长', 'explosive', 'rapid growth'],
-            'mature_period': ['成熟期', '稳定阶段', 'mature', 'stable period'],
-            'peak_year': ['峰值年份', '最高年份', 'peak', 'maximum year'],
+            // 年发文量趋势分析
+            'startup_period': ['起步期时间段', '起步期', '初期', '开始阶段', 'startup period', 'initial period'],
+            'startup_papers': ['起步期年均发文量', '起步期发文量', '初期发文量', 'startup papers'],
+            'growth_period': ['成长期时间段', '成长期', '发展阶段', 'growth period', 'development period'],
+            'growth_papers': ['成长期年均发文量', '成长期发文量', 'growth papers'],
+            'burst_period': ['爆发期时间段', '爆发期', '快速增长', 'burst period', 'explosive period'],
+            'burst_papers': ['爆发期年均发文量', '爆发期发文量', 'burst papers'],
+            'maturity_period': ['成熟期时间段', '成熟期', '稳定阶段', 'maturity period', 'stable period'],
+            'maturity_papers': ['成熟期年均发文量', '成熟期发文量', 'maturity papers'],
+            'peak_year': ['峰值年份', '最高年份', 'peak year', 'maximum year'],
             'peak_papers': ['峰值发文量', '最高发文量', 'peak papers', 'maximum papers'],
-            'lowest_year': ['最低谷年份', '最低年份', 'lowest year', 'minimum year'],
-            'lowest_papers': ['最低谷发文量', '最低发文量', 'lowest papers', 'minimum papers'],
-            'overall_growth_rate': ['总体增长率', '总增长率', 'overall growth', 'total growth rate'],
+            'trough_year': ['最低谷年份', '最低年份', 'trough year', 'lowest year', 'minimum year'],
+            'trough_papers': ['最低谷发文量', '最低发文量', 'trough papers', 'lowest papers', 'minimum papers'],
+            'overall_growth_rate': ['总体增长率', '总增长率', 'overall growth rate', 'total growth rate'],
+            'recent_5yr_growth_rate': ['近5年增长率', '最近五年增长率', 'recent 5-year growth rate'],
             'recent_5year_growth_rate': ['近5年增长率', '最近五年增长率', 'recent 5-year growth'],
         
             // 国家/地区分布
