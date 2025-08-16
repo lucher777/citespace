@@ -84,15 +84,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // 绑定图文采集按钮事件
     const textCaptureBtns = document.querySelectorAll('.text-capture-btn');
     if (textCaptureBtns.length > 0) {
-        textCaptureBtns.forEach(btn => {
+        console.log('找到图文采集按钮数量:', textCaptureBtns.length);
+        textCaptureBtns.forEach((btn, index) => {
             btn.addEventListener('click', (event) => {
+                console.log('图文采集按钮被点击:', index);
+                event.preventDefault();
+                event.stopPropagation();
                 if (typeof openTextCaptureModal === 'function') {
                     openTextCaptureModal(event);
                 } else {
                     console.error('openTextCaptureModal function not found');
+                    alert('图文采集功能暂时不可用');
                 }
             });
         });
+    } else {
+        console.log('未找到图文采集按钮');
     }
     
     // 设置自动保存
@@ -226,7 +233,7 @@ function adjustWaterfallLayout() {
     const formContainer = document.querySelector('.form-container');
     if (!formContainer) return;
     
-    // 确保容器始终显示为grid
+    // 确保容器使用grid布局
     if (formContainer.style.display !== 'grid') {
         formContainer.style.display = 'grid';
     }
@@ -250,19 +257,21 @@ function addModuleHoverEffects() {
     sections.forEach(section => {
         // 添加鼠标进入效果
         section.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-3px) scale(1.02)';
-            this.style.boxShadow = '0 12px 30px rgba(0,0,0,0.15)';
+            this.style.transform = 'translateY(-8px) scale(1.02)';
+            this.style.boxShadow = '0 20px 40px rgba(102, 126, 234, 0.15)';
+            this.style.borderColor = 'rgba(102, 126, 234, 0.3)';
         });
         
         // 添加鼠标离开效果
         section.addEventListener('mouseleave', function() {
             this.style.transform = 'translateY(0) scale(1)';
-            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+            this.style.boxShadow = '0 8px 25px rgba(0,0,0,0.08)';
+            this.style.borderColor = 'rgba(102, 126, 234, 0.1)';
         });
     });
 }
 
-// 添加模块点击展开/收起功能
+// 移除模块点击展开/收起功能
 function addModuleToggleEffects() {
     const sections = document.querySelectorAll('.section');
     
@@ -270,33 +279,14 @@ function addModuleToggleEffects() {
         const header = section.querySelector('h3');
         if (!header) return;
         
-        // 添加点击指示器
-        header.style.cursor = 'pointer';
-        header.innerHTML += '<span class="toggle-indicator" style="margin-left: auto; font-size: 12px; opacity: 0.6;">▼</span>';
+        // 移除点击指示器和点击事件
+        header.style.cursor = 'default';
         
-        // 添加点击事件
-        header.addEventListener('click', function(e) {
-            // 如果点击的是按钮，不触发折叠
-            if (e.target.closest('.text-capture-btn')) {
-                return;
-            }
-            
-            const content = section.querySelector('.form-grid, .stats-row, .ranking-group, .cluster-grid, .timeline-item');
-            if (content) {
-                const isCollapsed = content.style.display === 'none';
-                content.style.display = isCollapsed ? 'block' : 'none';
-                
-                const indicator = this.querySelector('.toggle-indicator');
-                if (indicator) {
-                    indicator.textContent = isCollapsed ? '▼' : '▶';
-                }
-                
-                // 重新调整布局
-                setTimeout(() => {
-                    adjustWaterfallLayout();
-                }, 300);
-            }
-        });
+        // 移除可能存在的toggle-indicator
+        const existingIndicator = header.querySelector('.toggle-indicator');
+        if (existingIndicator) {
+            existingIndicator.remove();
+        }
     });
 }
 
