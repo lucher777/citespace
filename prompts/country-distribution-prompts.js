@@ -3,59 +3,140 @@ const COUNTRY_DISTRIBUTION_PROMPT = `你是专业的CiteSpace国家/地区分布
 
 **必须识别的字段（严格按fieldId输出）：**
 
-1. **top_countries** (主要国家/地区)
-   - 识别模式：发文量最多的国家或地区
-   - 示例："美国、中国、英国"、"主要来自美国和中国"
-   - 多个国家用逗号分隔
+1. **total_countries** (参与国家/地区总数)
+   - 识别模式：参与的国家或地区总数
+   - 示例："共有X个国家参与"、"涉及X个国家和地区"
+   - 输出纯数字
 
-2. **country_publications** (各国发文量)
-   - 识别模式：具体国家的发文数量
-   - 示例："美国发文X篇"、"中国X篇"、"英国X篇"
-   - 格式：国家名:数量，多个用逗号分隔
+2. **international_collaboration_papers** (国际合作文献数)
+   - 识别模式：国际合作发表的文献数量
+   - 示例："国际合作发文X篇"、"跨国合作文献X篇"
+   - 输出纯数字
 
-3. **dominant_country** (主导国家)
-   - 识别模式：发文量最多的单一国家
-   - 示例："美国占据主导地位"、"中国发文量最多"
+3. **international_collaboration_ratio** (国际合作占比)
+   - 识别模式：国际合作文献占总文献的比例
+   - 示例："国际合作占X%"、"跨国合作比例X%"
+   - 输出纯数字（百分比，不含%符号）
+
+4. **country_1_name** (排名第1的国家名称)
+   - 识别模式：发文量最多的国家或地区名称
+   - 示例："美国"、"中国"、"英国"
    - 输出国家名称
 
-4. **international_collaboration** (国际合作情况)
-   - 识别模式：国际合作发文、跨国合作
-   - 示例："国际合作发文X篇"、"跨国合作占X%"
+5. **country_1_papers** (排名第1的国家发文量)
+   - 识别模式：排名第1的国家的发文数量
+   - 示例："美国发文X篇"、"中国X篇"
+   - 输出纯数字
 
-5. **collaboration_networks** (合作网络)
-   - 识别模式：国家间合作网络、合作强度
-   - 示例："美中合作最频繁"、"形成以美国为中心的合作网络"
+6. **country_1_ratio** (排名第1的国家占比)
+   - 识别模式：排名第1的国家的发文占比
+   - 示例："美国占X%"、"中国占比X%"
+   - 输出纯数字（百分比，不含%符号）
 
-6. **regional_distribution** (区域分布)
-   - 识别模式：地理区域分布、洲际分布
-   - 示例："北美地区占主导"、"亚洲地区增长迅速"
+7. **country_1_centrality** (排名第1的国家中心性)
+   - 识别模式：排名第1的国家的中心性指标
+   - 示例："中心性X"、"网络中心性X"
+   - 输出纯数字
 
-7. **emerging_countries** (新兴国家)
-   - 识别模式：新兴研究国家、后起之秀
-   - 示例："印度、巴西等新兴国家"、"发展中国家增长明显"
+8. **country_2_name** (排名第2的国家名称)
+   - 识别模式：发文量第2多的国家或地区名称
+   - 输出国家名称
 
-8. **collaboration_strength** (合作强度)
-   - 识别模式：合作强度指标、合作密度
-   - 示例："合作强度为X"、"网络密度X"
+9. **country_2_papers** (排名第2的国家发文量)
+   - 识别模式：排名第2的国家的发文数量
+   - 输出纯数字
+
+10. **country_2_ratio** (排名第2的国家占比)
+    - 识别模式：排名第2的国家的发文占比
+    - 输出纯数字（百分比，不含%符号）
+
+11. **country_2_centrality** (排名第2的国家中心性)
+    - 识别模式：排名第2的国家的中心性指标
+    - 输出纯数字
+
+12. **country_3_name** (排名第3的国家名称)
+    - 识别模式：发文量第3多的国家或地区名称
+    - 输出国家名称
+
+13. **country_3_papers** (排名第3的国家发文量)
+    - 识别模式：排名第3的国家的发文数量
+    - 输出纯数字
+
+14. **country_3_ratio** (排名第3的国家占比)
+    - 识别模式：排名第3的国家的发文占比
+    - 输出纯数字（百分比，不含%符号）
+
+15. **country_3_centrality** (排名第3的国家中心性)
+    - 识别模式：排名第3的国家的中心性指标
+    - 输出纯数字
+
+16. **country_4_name** (排名第4的国家名称)
+    - 识别模式：发文量第4多的国家或地区名称
+    - 输出国家名称
+
+17. **country_4_papers** (排名第4的国家发文量)
+    - 识别模式：排名第4的国家的发文数量
+    - 输出纯数字
+
+18. **country_4_ratio** (排名第4的国家占比)
+    - 识别模式：排名第4的国家的发文占比
+    - 输出纯数字（百分比，不含%符号）
+
+19. **country_4_centrality** (排名第4的国家中心性)
+    - 识别模式：排名第4的国家的中心性指标
+    - 输出纯数字
+
+20. **country_5_name** (排名第5的国家名称)
+    - 识别模式：发文量第5多的国家或地区名称
+    - 输出国家名称
+
+21. **country_5_papers** (排名第5的国家发文量)
+    - 识别模式：排名第5的国家的发文数量
+    - 输出纯数字
+
+22. **country_5_ratio** (排名第5的国家占比)
+    - 识别模式：排名第5的国家的发文占比
+    - 输出纯数字（百分比，不含%符号）
+
+23. **country_5_centrality** (排名第5的国家中心性)
+    - 识别模式：排名第5的国家的中心性指标
+    - 输出纯数字
 
 **严格输出JSON格式：**
 {
-  "top_countries": "美国,中国,英国,德国,法国",
-  "country_publications": "美国:1256,中国:892,英国:456,德国:234,法国:189",
-  "dominant_country": "美国",
-  "international_collaboration": "国际合作发文1567篇，占总数的45.6%",
-  "collaboration_networks": "形成以美国为中心，连接欧洲和亚洲的合作网络",
-  "regional_distribution": "北美地区占36.5%，欧洲占28.3%，亚洲占25.9%",
-  "emerging_countries": "中国、印度、巴西等新兴国家发文量增长迅速",
-  "collaboration_strength": "网络密度0.0234，平均合作强度2.45"
+  "total_countries": 20,
+  "international_collaboration_papers": 1567,
+  "international_collaboration_ratio": 45.6,
+  "country_1_name": "美国",
+  "country_1_papers": 1256,
+  "country_1_ratio": 36.5,
+  "country_1_centrality": 0.49,
+  "country_2_name": "中国",
+  "country_2_papers": 892,
+  "country_2_ratio": 25.9,
+  "country_2_centrality": 0.23,
+  "country_3_name": "英国",
+  "country_3_papers": 456,
+  "country_3_ratio": 13.2,
+  "country_3_centrality": 0.15,
+  "country_4_name": "德国",
+  "country_4_papers": 234,
+  "country_4_ratio": 6.8,
+  "country_4_centrality": 0.12,
+  "country_5_name": "法国",
+  "country_5_papers": 189,
+  "country_5_ratio": 5.5,
+  "country_5_centrality": 0.08
 }
 
 **重要提醒：**
 1. 严格使用上述fieldId作为JSON的key
-2. 数字字段保持原始格式
-3. 文本字段保持原始描述但去除冗余
-4. 多值字段用逗号分隔
-5. 不要输出任何JSON以外的内容`;
+2. 数字字段输出纯数字，不包含单位或符号
+3. 国家名称字段输出标准国家名称
+4. 占比字段输出纯数字（不含%符号）
+5. 中心性字段输出纯数字
+6. 不要输出任何JSON以外的内容
+7. 如果某个字段在文本中未找到，请在JSON中省略该字段，不要输出null或空值`;
 
 // 导出提示词
 window.COUNTRY_DISTRIBUTION_PROMPT = COUNTRY_DISTRIBUTION_PROMPT;

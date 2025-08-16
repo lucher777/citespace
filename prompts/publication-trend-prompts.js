@@ -33,7 +33,7 @@ const PUBLICATION_TREND_ANALYSIS_PROMPT = `你是专业的CiteSpace年发文量�
 
 7. **development_stages** (发展阶段)
    - 识别模式：研究发展阶段划分
-   - 示例："萌芽期、发展期、成熟期"、"起步阶段、快速发展阶段"
+   - 示例："起步期、成长期、爆发期"、"起步阶段、快速发展阶段"
 
 8. **key_events** (关键事件)
    - 识别模式：影响发文量的重要事件
@@ -47,7 +47,7 @@ const PUBLICATION_TREND_ANALYSIS_PROMPT = `你是专业的CiteSpace年发文量�
   "peak_publications": 156,
   "growth_rate": "年均增长15%",
   "trend_description": "整体呈上升趋势，2010年后趋于稳定",
-  "development_stages": "萌芽期(1982-1995)、发展期(1996-2005)、成熟期(2006-2013)",
+  "development_stages": "起步期(1982-1995)、成长期(1996-2005)、爆发期(2006-2013)",
   "key_events": "2000年政策支持，2010年技术突破"
 }
 

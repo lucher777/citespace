@@ -93,12 +93,12 @@ const MODULE_INFO = {
     'country-distribution': {
         name: '国家/地区分布',
         description: '分析文献的地理分布和国际合作情况',
-        fields: ['top_countries', 'country_publications', 'dominant_country', 'international_collaboration', 'collaboration_networks', 'regional_distribution', 'emerging_countries', 'collaboration_strength']
+        fields: ['total_countries', 'international_collaboration_papers', 'international_collaboration_ratio', 'country_1_name', 'country_1_papers', 'country_1_ratio', 'country_1_centrality', 'country_2_name', 'country_2_papers', 'country_2_ratio', 'country_2_centrality', 'country_3_name', 'country_3_papers', 'country_3_ratio', 'country_3_centrality', 'country_4_name', 'country_4_papers', 'country_4_ratio', 'country_4_centrality', 'country_5_name', 'country_5_papers', 'country_5_ratio', 'country_5_centrality']
     },
     'journal-distribution': {
         name: '期刊分布',
         description: '分析文献的期刊分布和发表质量',
-        fields: ['top_journals', 'journal_publications', 'core_journals', 'journal_impact_factors', 'journal_categories', 'publication_quality', 'journal_trends', 'open_access_journals']
+        fields: ['total_journals', 'core_journals_count', 'q1_journals_papers', 'high_if_journals_count', 'journal_1_name', 'journal_1_papers', 'journal_1_ratio', 'journal_1_impact_factor', 'journal_2_name', 'journal_2_papers', 'journal_2_ratio', 'journal_2_impact_factor', 'journal_3_name', 'journal_3_papers', 'journal_3_ratio', 'journal_3_impact_factor', 'journal_4_name', 'journal_4_papers', 'journal_4_ratio', 'journal_4_impact_factor', 'journal_5_name', 'journal_5_papers', 'journal_5_ratio', 'journal_5_impact_factor']
     },
     'institution-distribution': {
         name: '机构分布',
@@ -113,7 +113,7 @@ const MODULE_INFO = {
     'burst-analysis': {
         name: '突现词分析',
         description: '识别和分析突现性关键词',
-        fields: ['burst_terms', 'burst_strength', 'burst_period', 'burst_duration', 'burst_categories', 'burst_trends', 'burst_impact', 'burst_evolution']
+        fields: ['total_burst_terms', 'current_burst_terms', 'burst_1_term', 'burst_1_strength', 'burst_1_start_year', 'burst_1_duration', 'burst_2_term', 'burst_2_strength', 'burst_2_start_year', 'burst_2_duration', 'burst_3_term', 'burst_3_strength', 'burst_3_start_year', 'burst_3_duration', 'burst_4_term', 'burst_4_strength', 'burst_4_start_year', 'burst_4_duration', 'burst_5_term', 'burst_5_strength', 'burst_5_start_year', 'burst_5_duration']
     },
     'cluster-analysis': {
         name: '聚类分析',
@@ -128,7 +128,7 @@ const MODULE_INFO = {
     'temporal-evolution': {
         name: '年发文量趋势分析',
         description: '分析文献发表的时间趋势和变化模式',
-        fields: ['startup_period', 'startup_papers', 'growth_period', 'growth_papers', 'burst_period', 'burst_papers', 'maturity_period', 'maturity_papers', 'peak_year', 'peak_papers', 'trough_year', 'trough_papers', 'overall_growth_rate', 'recent_5yr_growth_rate']
+        fields: ['startup_period', 'startup_papers', 'growth_period', 'growth_papers', 'burst_period', 'burst_papers', 'peak_year', 'peak_papers', 'trough_year', 'trough_papers', 'overall_growth_rate', 'recent_5yr_growth_rate']
     },
     'core-citations': {
         name: '核心引文',

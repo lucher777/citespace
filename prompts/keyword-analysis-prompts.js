@@ -1,61 +1,98 @@
 // 关键词分析模块提示词
-const KEYWORD_ANALYSIS_PROMPT = `你是专业的CiteSpace关键词分析数据提取助手。请从文本中准确识别并提取以下字段的信息：
+const KEYWORD_ANALYSIS_PROMPT = `你是专业的CiteSpace关键词分析数据提取助手。请从文本或图像中准确识别并提取以下字段的信息：
 
 **必须识别的字段（严格按fieldId输出）：**
 
-1. **top_keywords** (主要关键词)
-   - 识别模式：高频关键词、重要关键词
-   - 示例："人工智能、机器学习、深度学习"、"主要关键词包括"
-   - 多个关键词用逗号分隔
+1. **total_keywords** (关键词总数)
+   - 识别模式：关键词总数、总词汇数
+   - 示例："关键词总数X个"、"共识别X个关键词"
+   - 格式：数字
 
-2. **keyword_frequency** (关键词频次)
-   - 识别模式：关键词出现频次、频率
-   - 示例："人工智能出现X次"、"关键词频次X"
-   - 格式：关键词:频次，多个用逗号分隔
+2. **high_frequency_keywords** (高频关键词数量)
+   - 识别模式：高频关键词数量、频次≥10的关键词数量
+   - 示例："高频关键词X个"、"频次≥10的关键词X个"
+   - 格式：数字
 
-3. **keyword_centrality** (关键词中心性)
-   - 识别模式：关键词中心性、重要性指标
-   - 示例："中心性X"、"重要性X"
-   - 保持原始数值格式
+3. **keyword_X_term** (关键词X的词汇)
+   - 识别模式：排名第X的关键词、第X位关键词
+   - 示例："排名第1的关键词是X"、"第X位关键词"
+   - 支持keyword_1_term到keyword_15_term
 
-4. **keyword_clusters** (关键词聚类)
-   - 识别模式：关键词聚类、主题群组
-   - 示例："技术类关键词"、"理论类关键词"
+4. **keyword_X_frequency** (关键词X的频次)
+   - 识别模式：关键词X的出现频次、频率
+   - 示例："关键词X出现Y次"、"频次Y"
+   - 格式：数字
 
-5. **keyword_evolution** (关键词演化)
-   - 识别模式：关键词时间演化、变化趋势
-   - 示例："关键词随时间变化"、"新兴关键词出现"
+5. **keyword_X_centrality** (关键词X的中心性)
+   - 识别模式：关键词X的中心性、重要性指标
+   - 示例："中心性Y"、"重要性Y"
+   - 格式：数字（保留3位小数）
 
-6. **keyword_connections** (关键词连接)
-   - 识别模式：关键词间连接、共现关系
-   - 示例："关键词共现强度X"、"连接密度X"
+6. **keyword_X_first_year** (关键词X的首现年份)
+   - 识别模式：关键词X的首现年份、首次出现时间
+   - 示例："首现年份Y"、"首次出现Y年"
+   - 格式：4位数字年份
 
-7. **keyword_impact** (关键词影响)
-   - 识别模式：关键词影响、重要性
-   - 示例："高影响关键词X个"、"核心关键词X个"
-
-8. **keyword_trends** (关键词趋势)
-   - 识别模式：关键词趋势、发展方向
-   - 示例："技术类关键词增长"、"新兴主题涌现"
+**表格数据识别说明：**
+如果图像中包含关键词排名表格，请按以下方式识别：
+- 表格列通常包含：排名、关键词、频次、中心性、首现年份
+- 将表格行数据映射到对应的keyword_X_字段
+- 排名第1行对应keyword_1_，排名第2行对应keyword_2_，以此类推
+- 确保频次和中心性数值格式正确
 
 **严格输出JSON格式：**
 {
-  "top_keywords": "人工智能,机器学习,深度学习,神经网络,大数据",
-  "keyword_frequency": "人工智能:234,机器学习:189,深度学习:156,神经网络:123,大数据:98",
-  "keyword_centrality": "人工智能:0.45,机器学习:0.38,深度学习:0.32,神经网络:0.28,大数据:0.25",
-  "keyword_clusters": "技术类关键词占50%，理论类关键词占30%，应用类关键词占20%",
-  "keyword_evolution": "关键词随时间演化，新兴关键词不断出现，主题分化明显",
-  "keyword_connections": "关键词共现强度0.0234，连接密度0.0456",
-  "keyword_impact": "高影响关键词23个，核心关键词67个",
-  "keyword_trends": "技术类关键词增长迅速，新兴主题不断涌现，跨学科融合趋势明显"
+  "total_keywords": 156,
+  "high_frequency_keywords": 23,
+  "keyword_1_term": "人工智能",
+  "keyword_1_frequency": 234,
+  "keyword_1_centrality": 0.456,
+  "keyword_1_first_year": 2010,
+  "keyword_2_term": "机器学习",
+  "keyword_2_frequency": 189,
+  "keyword_2_centrality": 0.389,
+  "keyword_2_first_year": 2011,
+  "keyword_3_term": "深度学习",
+  "keyword_3_frequency": 156,
+  "keyword_3_centrality": 0.323,
+  "keyword_3_first_year": 2012,
+  "keyword_4_term": "神经网络",
+  "keyword_4_frequency": 123,
+  "keyword_4_centrality": 0.287,
+  "keyword_4_first_year": 2013,
+  "keyword_5_term": "大数据",
+  "keyword_5_frequency": 98,
+  "keyword_5_centrality": 0.245,
+  "keyword_5_first_year": 2014,
+  "keyword_6_term": "自然语言处理",
+  "keyword_6_frequency": 87,
+  "keyword_6_centrality": 0.212,
+  "keyword_6_first_year": 2015,
+  "keyword_7_term": "计算机视觉",
+  "keyword_7_frequency": 76,
+  "keyword_7_centrality": 0.198,
+  "keyword_7_first_year": 2016,
+  "keyword_8_term": "强化学习",
+  "keyword_8_frequency": 65,
+  "keyword_8_centrality": 0.176,
+  "keyword_8_first_year": 2017,
+  "keyword_9_term": "知识图谱",
+  "keyword_9_frequency": 54,
+  "keyword_9_centrality": 0.154,
+  "keyword_9_first_year": 2018,
+  "keyword_10_term": "区块链",
+  "keyword_10_frequency": 43,
+  "keyword_10_centrality": 0.132,
+  "keyword_10_first_year": 2019
 }
 
 **重要提醒：**
 1. 严格使用上述fieldId作为JSON的key
-2. 数字字段保持原始格式
-3. 文本字段保持原始描述但去除冗余
-4. 多值字段用逗号分隔
-5. 不要输出任何JSON以外的内容`;
+2. 数字字段保持原始格式，中心性保留3位小数
+3. 年份字段使用4位数字格式
+4. 关键词字段保持原始词汇
+5. 支持提取前10个关键词的完整信息
+6. 不要输出任何JSON以外的内容`;
 
 // 导出提示词
 window.KEYWORD_ANALYSIS_PROMPT = KEYWORD_ANALYSIS_PROMPT;

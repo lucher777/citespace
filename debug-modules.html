@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>模块显示调试</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .debug-info {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #007bff;
+        }
+        .debug-item {
+            margin: 10px 0;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+        }
+        .error { color: #dc3545; }
+        .success { color: #28a745; }
+        .warning { color: #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="debug-info">
+            <h3>🔍 模块显示调试</h3>
+            <div class="debug-item">
+                <strong>页面加载时间:</strong> <span id="loadTime">计算中...</span>
+            </div>
+            <div class="debug-item">
+                <strong>模块总数:</strong> <span id="moduleCount">计算中...</span>
+            </div>
+            <div class="debug-item">
+                <strong>可见模块数:</strong> <span id="visibleCount">计算中...</span>
+            </div>
+            <div class="debug-item">
+                <strong>容器显示状态:</strong> <span id="containerDisplay">检测中...</span>
+            </div>
+            <div class="debug-item">
+                <strong>瀑布流状态:</strong> <span id="waterfallStatus">检测中...</span>
+            </div>
+            <div class="debug-item">
+                <strong>初始化状态:</strong> <span id="initStatus">等待中...</span>
+            </div>
+        </div>
+        
+        <div class="form-container" id="testContainer">
+            <!-- 测试模块 -->
+            <div class="section">
+                <h3><span class="section-icon">1</span>测试模块1</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>测试输入</label>
+                        <input type="text" placeholder="测试">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3><span class="section-icon">2</span>测试模块2</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>测试输入</label>
+                        <input type="text" placeholder="测试">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3><span class="section-icon">3</span>测试模块3</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>测试输入</label>
+                        <input type="text" placeholder="测试">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const startTime = performance.now();
+        
+        function updateDebugInfo() {
+            const loadTime = ((performance.now() - startTime) / 1000).toFixed(2);
+            document.getElementById('loadTime').textContent = loadTime + '秒';
+            
+            const sections = document.querySelectorAll('.section');
+            document.getElementById('moduleCount').textContent = sections.length;
+            
+            const visibleSections = Array.from(sections).filter(section => 
+                section.style.display !== 'none' && section.offsetParent !== null
+            );
+            document.getElementById('visibleCount').textContent = visibleSections.length;
+            
+            const container = document.getElementById('testContainer');
+            const computedStyle = window.getComputedStyle(container);
+            document.getElementById('containerDisplay').textContent = computedStyle.display;
+            
+            if (computedStyle.display === 'grid') {
+                document.getElementById('waterfallStatus').textContent = '正常';
+                document.getElementById('waterfallStatus').className = 'success';
+            } else {
+                document.getElementById('waterfallStatus').textContent = '异常: ' + computedStyle.display;
+                document.getElementById('waterfallStatus').className = 'error';
+            }
+            
+            // 检查初始化状态
+            if (typeof initWaterfallFeatures === 'function') {
+                document.getElementById('initStatus').textContent = '函数存在';
+                document.getElementById('initStatus').className = 'success';
+            } else {
+                document.getElementById('initStatus').textContent = '函数不存在';
+                document.getElementById('initStatus').className = 'error';
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成');
+            updateDebugInfo();
+            
+            // 每秒更新一次状态
+            setInterval(updateDebugInfo, 1000);
+            
+            // 尝试手动初始化瀑布流
+            setTimeout(() => {
+                if (typeof initWaterfallFeatures === 'function') {
+                    console.log('手动调用瀑布流初始化');
+                    initWaterfallFeatures();
+                } else {
+                    console.log('瀑布流初始化函数不存在');
+                }
+            }, 1000);
+        });
+    </script>
+    
+    <!-- 引入主脚本 -->
+    <script src="main.js"></script>
+</body>
+</html>

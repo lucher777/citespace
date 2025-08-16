@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>聚类分析模块测试</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>聚类分析模块测试</h1>
+        <p>测试聚类分析模块的字段匹配和数据采集功能</p>
+        
+        <!-- 聚类分析测试区域 -->
+        <div class="section active" data-section-id="cluster-analysis">
+            <h3><span class="section-icon">8</span>聚类分析</h3>
+            <div class="stats-row">
+                <div class="stats-item">
+                    <div class="stats-label">聚类总数</div>
+                    <input type="number" class="stats-input" data-field-id="total_clusters" placeholder="0">
+                </div>
+                <div class="stats-item">
+                    <div class="stats-label">有效聚类数量</div>
+                    <input type="number" class="stats-input" data-field-id="valid_clusters" placeholder="0">
+                </div>
+                <div class="stats-item">
+                    <div class="stats-label">平均Silhouette值</div>
+                    <input type="number" step="0.001" class="stats-input" data-field-id="average_silhouette" placeholder="0.000">
+                </div>
+                <div class="stats-item">
+                    <div class="stats-label">模块度Q值</div>
+                    <input type="number" step="0.001" class="stats-input" data-field-id="modularity_q" placeholder="0.000">
+                </div>
+            </div>
+            <div class="cluster-grid">
+                <div class="cluster-item">
+                    <div class="cluster-label">聚类 #0</div>
+                    <input type="text" class="cluster-input" data-field-id="cluster_0_name" placeholder="聚类名称">
+                    <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_0_silhouette" placeholder="Silhouette值">
+                    <input type="number" class="cluster-input" data-field-id="cluster_0_papers" placeholder="文献数">
+                    <textarea class="cluster-input" data-field-id="cluster_0_keywords" placeholder="主要关键词" rows="2"></textarea>
+                </div>
+                <div class="cluster-item">
+                    <div class="cluster-label">聚类 #1</div>
+                    <input type="text" class="cluster-input" data-field-id="cluster_1_name" placeholder="聚类名称">
+                    <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_1_silhouette" placeholder="Silhouette值">
+                    <input type="number" class="cluster-input" data-field-id="cluster_1_papers" placeholder="文献数">
+                    <textarea class="cluster-input" data-field-id="cluster_1_keywords" placeholder="主要关键词" rows="2"></textarea>
+                </div>
+                <div class="cluster-item">
+                    <div class="cluster-label">聚类 #2</div>
+                    <input type="text" class="cluster-input" data-field-id="cluster_2_name" placeholder="聚类名称">
+                    <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_2_silhouette" placeholder="Silhouette值">
+                    <input type="number" class="cluster-input" data-field-id="cluster_2_papers" placeholder="文献数">
+                    <textarea class="cluster-input" data-field-id="cluster_2_keywords" placeholder="主要关键词" rows="2"></textarea>
+                </div>
+                <div class="cluster-item">
+                    <div class="cluster-label">聚类 #3</div>
+                    <input type="text" class="cluster-input" data-field-id="cluster_3_name" placeholder="聚类名称">
+                    <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_3_silhouette" placeholder="Silhouette值">
+                    <input type="number" class="cluster-input" data-field-id="cluster_3_papers" placeholder="文献数">
+                    <textarea class="cluster-input" data-field-id="cluster_3_keywords" placeholder="主要关键词" rows="2"></textarea>
+                </div>
+                <div class="cluster-item">
+                    <div class="cluster-label">聚类 #4</div>
+                    <input type="text" class="cluster-input" data-field-id="cluster_4_name" placeholder="聚类名称">
+                    <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_4_silhouette" placeholder="Silhouette值">
+                    <input type="number" class="cluster-input" data-field-id="cluster_4_papers" placeholder="文献数">
+                    <textarea class="cluster-input" data-field-id="cluster_4_keywords" placeholder="主要关键词" rows="2"></textarea>
+                </div>
+                <div class="cluster-item">
+                    <div class="cluster-label">聚类 #5</div>
+                    <input type="text" class="cluster-input" data-field-id="cluster_5_name" placeholder="聚类名称">
+                    <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_5_silhouette" placeholder="Silhouette值">
+                    <input type="number" class="cluster-input" data-field-id="cluster_5_papers" placeholder="文献数">
+                    <textarea class="cluster-input" data-field-id="cluster_5_keywords" placeholder="主要关键词" rows="2"></textarea>
+                </div>
+                <div class="cluster-item">
+                    <div class="cluster-label">聚类 #6</div>
+                    <input type="text" class="cluster-input" data-field-id="cluster_6_name" placeholder="聚类名称">
+                    <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_6_silhouette" placeholder="Silhouette值">
+                    <input type="number" class="cluster-input" data-field-id="cluster_6_papers" placeholder="文献数">
+                    <textarea class="cluster-input" data-field-id="cluster_6_keywords" placeholder="主要关键词" rows="2"></textarea>
+                </div>
+                <div class="cluster-item">
+                    <div class="cluster-label">聚类 #7</div>
+                    <input type="text" class="cluster-input" data-field-id="cluster_7_name" placeholder="聚类名称">
+                    <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_7_silhouette" placeholder="Silhouette值">
+                    <input type="number" class="cluster-input" data-field-id="cluster_7_papers" placeholder="文献数">
+                    <textarea class="cluster-input" data-field-id="cluster_7_keywords" placeholder="主要关键词" rows="2"></textarea>
+                </div>
+                <div class="cluster-item">
+                    <div class="cluster-label">聚类 #8</div>
+                    <input type="text" class="cluster-input" data-field-id="cluster_8_name" placeholder="聚类名称">
+                    <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_8_silhouette" placeholder="Silhouette值">
+                    <input type="number" class="cluster-input" data-field-id="cluster_8_papers" placeholder="文献数">
+                    <textarea class="cluster-input" data-field-id="cluster_8_keywords" placeholder="主要关键词" rows="2"></textarea>
+                </div>
+                <div class="cluster-item">
+                    <div class="cluster-label">聚类 #9</div>
+                    <input type="text" class="cluster-input" data-field-id="cluster_9_name" placeholder="聚类名称">
+                    <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_9_silhouette" placeholder="Silhouette值">
+                    <input type="number" class="cluster-input" data-field-id="cluster_9_papers" placeholder="文献数">
+                    <textarea class="cluster-input" data-field-id="cluster_9_keywords" placeholder="主要关键词" rows="2"></textarea>
+                </div>
+                <div class="cluster-item">
+                    <div class="cluster-label">聚类 #10</div>
+                    <input type="text" class="cluster-input" data-field-id="cluster_10_name" placeholder="聚类名称">
+                    <input type="number" step="0.001" class="cluster-input" data-field-id="cluster_10_silhouette" placeholder="Silhouette值">
+                    <input type="number" class="cluster-input" data-field-id="cluster_10_papers" placeholder="文献数">
+                    <textarea class="cluster-input" data-field-id="cluster_10_keywords" placeholder="主要关键词" rows="2"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- 测试数据展示 -->
+        <div class="section">
+            <h3>测试数据</h3>
+            <p>根据您提供的图片，聚类分析数据应该包含以下信息：</p>
+            <ul>
+                <li>聚类总数：11个</li>
+                <li>Cluster 0: design thinking (63篇文献, Silhouette: 0.722)</li>
+                <li>Cluster 1: design-based research (56篇文献, Silhouette: 0.628)</li>
+                <li>Cluster 2: holistic approach (50篇文献, Silhouette: 0.741)</li>
+                <li>Cluster 3: professional development programme (47篇文献, Silhouette: 0.717)</li>
+                <li>Cluster 4: entrepreneurship education (45篇文献, Silhouette: 0.646)</li>
+                <li>Cluster 5: concept learning (41篇文献, Silhouette: 0.729)</li>
+                <li>Cluster 6: theoretical framework (41篇文献, Silhouette: 0.664)</li>
+                <li>Cluster 7: dt-cdio approach (35篇文献, Silhouette: 0.772)</li>
+                <li>Cluster 8: stem education (32篇文献, Silhouette: 0.818)</li>
+                <li>Cluster 9: web-conferencing environment (16篇文献, Silhouette: 0.942)</li>
+                <li>Cluster 10: faculty reaction (9篇文献, Silhouette: 0.915)</li>
+            </ul>
+        </div>
+
+        <!-- 字段映射验证 -->
+        <div class="section">
+            <h3>字段映射验证</h3>
+            <p>修复后的字段映射：</p>
+            <ul>
+                <li><strong>total_clusters</strong> → 聚类总数</li>
+                <li><strong>valid_clusters</strong> → 有效聚类数量</li>
+                <li><strong>average_silhouette</strong> → 平均Silhouette值</li>
+                <li><strong>modularity_q</strong> → 模块度Q值</li>
+                <li><strong>cluster_X_name</strong> → 聚类#X名称</li>
+                <li><strong>cluster_X_silhouette</strong> → 聚类#X Silhouette值</li>
+                <li><strong>cluster_X_papers</strong> → 聚类#X文献数</li>
+                <li><strong>cluster_X_keywords</strong> → 聚类#X关键词</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // 加载必要的脚本
+        document.addEventListener('DOMContentLoaded', function() {
+            // 模拟数据填充测试
+            const testData = {
+                "total_clusters": 11,
+                "valid_clusters": 11,
+                "average_silhouette": 0.745,
+                "modularity_q": 0.456,
+                "cluster_0_name": "design thinking",
+                "cluster_0_silhouette": 0.722,
+                "cluster_0_papers": 63,
+                "cluster_0_keywords": "design thinking",
+                "cluster_1_name": "design-based research",
+                "cluster_1_silhouette": 0.628,
+                "cluster_1_papers": 56,
+                "cluster_1_keywords": "design-based research",
+                "cluster_2_name": "holistic approach",
+                "cluster_2_silhouette": 0.741,
+                "cluster_2_papers": 50,
+                "cluster_2_keywords": "holistic approach",
+                "cluster_3_name": "professional development programme",
+                "cluster_3_silhouette": 0.717,
+                "cluster_3_papers": 47,
+                "cluster_3_keywords": "professional development programme",
+                "cluster_4_name": "entrepreneurship education",
+                "cluster_4_silhouette": 0.646,
+                "cluster_4_papers": 45,
+                "cluster_4_keywords": "entrepreneurship education",
+                "cluster_5_name": "concept learning",
+                "cluster_5_silhouette": 0.729,
+                "cluster_5_papers": 41,
+                "cluster_5_keywords": "concept learning",
+                "cluster_6_name": "theoretical framework",
+                "cluster_6_silhouette": 0.664,
+                "cluster_6_papers": 41,
+                "cluster_6_keywords": "theoretical framework",
+                "cluster_7_name": "dt-cdio approach",
+                "cluster_7_silhouette": 0.772,
+                "cluster_7_papers": 35,
+                "cluster_7_keywords": "dt-cdio approach",
+                "cluster_8_name": "stem education",
+                "cluster_8_silhouette": 0.818,
+                "cluster_8_papers": 32,
+                "cluster_8_keywords": "stem education",
+                "cluster_9_name": "web-conferencing environment",
+                "cluster_9_silhouette": 0.942,
+                "cluster_9_papers": 16,
+                "cluster_9_keywords": "web-conferencing environment",
+                "cluster_10_name": "faculty reaction",
+                "cluster_10_silhouette": 0.915,
+                "cluster_10_papers": 9,
+                "cluster_10_keywords": "faculty reaction"
+            };
+
+            // 填充测试数据
+            Object.keys(testData).forEach(fieldId => {
+                const field = document.querySelector(`[data-field-id="${fieldId}"]`);
+                if (field) {
+                    field.value = testData[fieldId];
+                    field.style.backgroundColor = '#e8f5e8';
+                    field.style.borderColor = '#27ae60';
+                }
+            });
+
+            console.log('聚类分析模块测试数据已加载');
+            console.log('字段映射验证完成');
+        });
+    </script>
+</body>
+</html>

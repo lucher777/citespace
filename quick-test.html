@@ -167,7 +167,7 @@
                     result += prompt.substring(0, 300) + '...\n';
                     
                     // 检查关键字段
-                    const requiredFields = ['startup_period', 'growth_period', 'burst_period', 'maturity_period'];
+                    const requiredFields = ['startup_period', 'growth_period', 'burst_period'];
                     for (const field of requiredFields) {
                         if (prompt.includes(field)) {
                             result += log(`✓ 包含字段: ${field}`, 'success');
@@ -201,8 +201,7 @@
                     "growth_papers": 45,
                     "burst_period": "2021-2024",
                     "burst_papers": 80,
-                    "maturity_period": "2023-2024",
-                    "maturity_papers": 90,
+                    
                     "peak_year": 2023,
                     "peak_papers": 95,
                     "trough_year": 2010,
@@ -224,8 +223,7 @@
                         { fieldId: 'growth_papers', label: '成长期年均发文量' },
                         { fieldId: 'burst_period', label: '爆发期时间段' },
                         { fieldId: 'burst_papers', label: '爆发期年均发文量' },
-                        { fieldId: 'maturity_period', label: '成熟期时间段' },
-                        { fieldId: 'maturity_papers', label: '成熟期年均发文量' },
+                        
                         { fieldId: 'peak_year', label: '峰值年份' },
                         { fieldId: 'peak_papers', label: '峰值发文量' },
                         { fieldId: 'trough_year', label: '最低谷年份' },

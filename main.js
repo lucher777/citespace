@@ -123,6 +123,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     `;
     document.head.appendChild(style);
+    
+    // 初始化瀑布流布局功能
+    initWaterfallFeatures();
 });
 
 // 清空所有表单数据
@@ -155,3 +158,159 @@ window.addEventListener('beforeunload', function() {
 
 // 导出清空表单函数
 window.clearAllFormData = clearAllFormData;
+
+// 瀑布流布局优化 - 合并到主初始化中
+function initWaterfallFeatures() {
+    // 初始化瀑布流布局
+    initWaterfallLayout();
+    
+    // 监听窗口大小变化，重新调整布局
+    window.addEventListener('resize', debounce(function() {
+        adjustWaterfallLayout();
+    }, 250));
+    
+    // 监听模块内容变化，重新调整布局（简化版）
+    const observer = new MutationObserver(function(mutations) {
+        let needsAdjustment = false;
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'childList') {
+                needsAdjustment = true;
+            } else if (mutation.type === 'attributes' && 
+                      (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
+                // 只有当模块被隐藏时才调整
+                const target = mutation.target;
+                if (target.classList.contains('section') && target.style.display === 'none') {
+                    needsAdjustment = true;
+                }
+            }
+        });
+        
+        if (needsAdjustment) {
+            adjustWaterfallLayout();
+        }
+    });
+    
+    // 观察表单容器的变化
+    const formContainer = document.querySelector('.form-container');
+    if (formContainer) {
+        observer.observe(formContainer, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: ['style', 'class']
+        });
+    }
+}
+
+// 初始化瀑布流布局
+function initWaterfallLayout() {
+    const formContainer = document.querySelector('.form-container');
+    if (!formContainer) return;
+    
+    // 确保所有模块都是可见的
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => {
+        section.style.display = 'block';
+        section.style.opacity = '1';
+    });
+    
+    // 添加模块悬停效果
+    addModuleHoverEffects();
+    
+    // 添加模块点击展开/收起功能
+    addModuleToggleEffects();
+}
+
+// 调整瀑布流布局
+function adjustWaterfallLayout() {
+    const formContainer = document.querySelector('.form-container');
+    if (!formContainer) return;
+    
+    // 确保容器始终显示为grid
+    if (formContainer.style.display !== 'grid') {
+        formContainer.style.display = 'grid';
+    }
+    
+    // 确保所有模块都是可见的
+    const sections = document.querySelectorAll('.section');
+    sections.forEach(section => {
+        if (section.style.display === 'none') {
+            section.style.display = 'block';
+        }
+        if (section.style.opacity !== '1') {
+            section.style.opacity = '1';
+        }
+    });
+}
+
+// 添加模块悬停效果
+function addModuleHoverEffects() {
+    const sections = document.querySelectorAll('.section');
+    
+    sections.forEach(section => {
+        // 添加鼠标进入效果
+        section.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px) scale(1.02)';
+            this.style.boxShadow = '0 12px 30px rgba(0,0,0,0.15)';
+        });
+        
+        // 添加鼠标离开效果
+        section.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)';
+        });
+    });
+}
+
+// 添加模块点击展开/收起功能
+function addModuleToggleEffects() {
+    const sections = document.querySelectorAll('.section');
+    
+    sections.forEach(section => {
+        const header = section.querySelector('h3');
+        if (!header) return;
+        
+        // 添加点击指示器
+        header.style.cursor = 'pointer';
+        header.innerHTML += '<span class="toggle-indicator" style="margin-left: auto; font-size: 12px; opacity: 0.6;">▼</span>';
+        
+        // 添加点击事件
+        header.addEventListener('click', function(e) {
+            // 如果点击的是按钮，不触发折叠
+            if (e.target.closest('.text-capture-btn')) {
+                return;
+            }
+            
+            const content = section.querySelector('.form-grid, .stats-row, .ranking-group, .cluster-grid, .timeline-item');
+            if (content) {
+                const isCollapsed = content.style.display === 'none';
+                content.style.display = isCollapsed ? 'block' : 'none';
+                
+                const indicator = this.querySelector('.toggle-indicator');
+                if (indicator) {
+                    indicator.textContent = isCollapsed ? '▼' : '▶';
+                }
+                
+                // 重新调整布局
+                setTimeout(() => {
+                    adjustWaterfallLayout();
+                }, 300);
+            }
+        });
+    });
+}
+
+// 防抖函数
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// 搜索功能已删除，确保模块正常显示

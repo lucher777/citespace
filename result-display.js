@@ -73,9 +73,6 @@ function displayCaptureResults(extractedData, descriptor, targetSection, rawText
         '爆发期时间段': 'burst_period',
         '爆发期': 'burst_period',
         '爆发期年均发文量': 'burst_papers',
-        '成熟期时间段': 'maturity_period',
-        '成熟期': 'maturity_period',
-        '成熟期年均发文量': 'maturity_papers',
         '峰值年份': 'peak_year',
         '最高年份': 'peak_year',
         '峰值发文量': 'peak_papers',
@@ -156,8 +153,6 @@ function displayCaptureResults(extractedData, descriptor, targetSection, rawText
             'growth_papers': ['成长期年均发文量', '成长期发文量', 'growth papers'],
             'burst_period': ['爆发期时间段', '爆发期', '快速增长', 'burst period', 'explosive period'],
             'burst_papers': ['爆发期年均发文量', '爆发期发文量', 'burst papers'],
-            'maturity_period': ['成熟期时间段', '成熟期', '稳定阶段', 'maturity period', 'stable period'],
-            'maturity_papers': ['成熟期年均发文量', '成熟期发文量', 'maturity papers'],
             'peak_year': ['峰值年份', '最高年份', 'peak year', 'maximum year'],
             'peak_papers': ['峰值发文量', '最高发文量', 'peak papers', 'maximum papers'],
             'trough_year': ['最低谷年份', '最低年份', 'trough year', 'lowest year', 'minimum year'],
@@ -225,6 +220,69 @@ function displayCaptureResults(extractedData, descriptor, targetSection, rawText
             'range': /(\d{4})\s*[-–—]\s*(\d{4})/,
             'decimal': /(\d+(?:\.\d+)?)/
         };
+        
+        // 国家/地区分布排名字段的特殊处理
+        const countryRankingFields = ['country_1_name', 'country_1_papers', 'country_1_ratio', 'country_1_centrality',
+                                    'country_2_name', 'country_2_papers', 'country_2_ratio', 'country_2_centrality',
+                                    'country_3_name', 'country_3_papers', 'country_3_ratio', 'country_3_centrality',
+                                    'country_4_name', 'country_4_papers', 'country_4_ratio', 'country_4_centrality',
+                                    'country_5_name', 'country_5_papers', 'country_5_ratio', 'country_5_centrality'];
+        
+        // 期刊分布排名字段的特殊处理
+        const journalRankingFields = ['journal_1_name', 'journal_1_papers', 'journal_1_ratio', 'journal_1_impact_factor',
+                                    'journal_2_name', 'journal_2_papers', 'journal_2_ratio', 'journal_2_impact_factor',
+                                    'journal_3_name', 'journal_3_papers', 'journal_3_ratio', 'journal_3_impact_factor',
+                                    'journal_4_name', 'journal_4_papers', 'journal_4_ratio', 'journal_4_impact_factor',
+                                    'journal_5_name', 'journal_5_papers', 'journal_5_ratio', 'journal_5_impact_factor'];
+        
+        // 突现词分析排名字段的特殊处理
+        const burstRankingFields = ['burst_1_term', 'burst_1_strength', 'burst_1_start_year', 'burst_1_duration',
+                                  'burst_2_term', 'burst_2_strength', 'burst_2_start_year', 'burst_2_duration',
+                                  'burst_3_term', 'burst_3_strength', 'burst_3_start_year', 'burst_3_duration',
+                                  'burst_4_term', 'burst_4_strength', 'burst_4_start_year', 'burst_4_duration',
+                                  'burst_5_term', 'burst_5_strength', 'burst_5_start_year', 'burst_5_duration'];
+        
+        // 检查是否为国家/地区分布模块
+        const isCountryDistributionModule = descriptor.title && descriptor.title.includes('国家/地区分布');
+        
+        // 检查是否为期刊分布模块
+        const isJournalDistributionModule = descriptor.title && descriptor.title.includes('期刊分布');
+        
+        // 检查是否为突现词分析模块
+        const isBurstAnalysisModule = descriptor.title && descriptor.title.includes('突现词分析');
+        
+        if (isCountryDistributionModule) {
+            console.log('检测到国家/地区分布模块，启用排名字段特殊处理');
+            
+            // 处理排名字段
+            countryRankingFields.forEach(fieldId => {
+                if (processedData[fieldId] !== undefined) {
+                    console.log(`国家/地区分布字段匹配: ${fieldId} = ${processedData[fieldId]}`);
+                }
+            });
+        }
+        
+        if (isJournalDistributionModule) {
+            console.log('检测到期刊分布模块，启用排名字段特殊处理');
+            
+            // 处理排名字段
+            journalRankingFields.forEach(fieldId => {
+                if (processedData[fieldId] !== undefined) {
+                    console.log(`期刊分布字段匹配: ${fieldId} = ${processedData[fieldId]}`);
+                }
+            });
+        }
+        
+        if (isBurstAnalysisModule) {
+            console.log('检测到突现词分析模块，启用排名字段特殊处理');
+            
+            // 处理排名字段
+            burstRankingFields.forEach(fieldId => {
+                if (processedData[fieldId] !== undefined) {
+                    console.log(`突现词分析字段匹配: ${fieldId} = ${processedData[fieldId]}`);
+                }
+            });
+        }
         
         descriptor.fields.forEach(field => {
             const allKeys = Object.keys(processedData);

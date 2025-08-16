@@ -15,8 +15,6 @@ const PUBLICATION_EVOLUTION_PROMPT = `分析图片中的发文量时间演化数
   "growth_papers": "数值",
   "burst_period": "YYYY-YYYY",
   "burst_papers": "数值",
-  "maturity_period": "YYYY-YYYY",
-  "maturity_papers": "数值",
   "peak_year": "YYYY",
   "peak_papers": "数值",
   "trough_year": "YYYY", 
@@ -29,7 +27,6 @@ const PUBLICATION_EVOLUTION_PROMPT = `分析图片中的发文量时间演化数
 - 起步期：发文量较少且增长缓慢的初期阶段
 - 成长期：发文量开始稳定增长的阶段
 - 爆发期：发文量快速增长的阶段
-- 成熟期：发文量达到较高水平且相对稳定的阶段
 
 **计算说明：**
 - 年均发文量 = 该阶段总发文量 ÷ 阶段年数
@@ -43,8 +40,6 @@ const PUBLICATION_EVOLUTION_PROMPT = `分析图片中的发文量时间演化数
 - growth_papers: 成长期年均发文量
 - burst_period: 爆发期时间段
 - burst_papers: 爆发期年均发文量
-- maturity_period: 成熟期时间段
-- maturity_papers: 成熟期年均发文量
 - peak_year: 峰值年份
 - peak_papers: 峰值发文量
 - trough_year: 最低谷年份

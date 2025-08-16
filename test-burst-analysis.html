@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>突现词分析模块测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .test-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .test-input {
+            width: 100%;
+            height: 250px;
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .test-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .test-button:hover {
+            background-color: #0056b3;
+        }
+        .test-result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+        }
+        .success {
+            color: #28a745;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .info {
+            color: #17a2b8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>突现词分析模块测试</h1>
+        
+        <div class="test-section">
+            <div class="test-title">测试数据（基于您提供的图片）</div>
+            <textarea class="test-input" id="testData">
+教育技术领域引文爆发关键词统计 (2010-2024)
+
+序号1：关键词 engineering education，开始年份 2010，结束年份 2018，持续时间 9年，强度 3.70，年份 2010
+序号2：关键词 beliefs，开始年份 2011，结束年份 2019，持续时间 9年，强度 2.94，年份 2011
+序号3：关键词 learning by design，开始年份 2012，结束年份 2017，持续时间 6年，强度 4.42，年份 2012
+序号4：关键词 design-based learning，开始年份 2012，结束年份 2015，持续时间 4年，强度 4.28，年份 2011
+序号5：关键词 design education，开始年份 2013，结束年份 2018，持续时间 6年，强度 3.31，年份 2013
+序号6：关键词 classroom，开始年份 2014，结束年份 2020，持续时间 7年，强度 3.97，年份 2014
+序号7：关键词 management education，开始年份 2017，结束年份 2020，持续时间 4年，强度 2.95，年份 2017
+序号8：关键词 performance，开始年份 2019，结束年份 2020，持续时间 2年，强度 2.99，年份 2015
+序号9：关键词 pedagogy，开始年份 2020，结束年份 2021，持续时间 2年，强度 3.39，年份 2020
+序号10：关键词 teachers，开始年份 2020，结束年份 2021，持续时间 2年，强度 3.27，年份 2014
+序号11：关键词 literacy，开始年份 2020，结束年份 2021，持续时间 2年，强度 2.86，年份 2020
+序号12：关键词 stem education，开始年份 2022，结束年份 2024，持续时间 3年，强度 3.15，年份 2019
+
+突现词总数：12个
+当前突现词数量：3个（仍在突现的词）
+            </textarea>
+            <button class="test-button" onclick="testBurstAnalysis()">测试突现词分析解析</button>
+            <div class="test-result" id="testResult"></div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">字段映射验证</div>
+            <div class="test-result" id="fieldMappingResult"></div>
+        </div>
+    </div>
+
+    <!-- 加载必要的脚本 -->
+    <script src="config.js"></script>
+    <script src="api-config.js"></script>
+    <script src="prompts/index.js"></script>
+    <script src="prompts/burst-analysis-prompts.js"></script>
+    <script src="ai-core.js"></script>
+    <script src="result-display.js"></script>
+    <script src="form-init.js"></script>
+
+    <script>
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            return `[${timestamp}] ${type.toUpperCase()}: ${message}\n`;
+        }
+
+        function testBurstAnalysis() {
+            const resultDiv = document.getElementById('testResult');
+            const testData = document.getElementById('testData').value;
+            
+            resultDiv.innerHTML = '';
+            resultDiv.innerHTML += log('开始测试突现词分析模块解析', 'info');
+            
+            // 1. 测试模块识别
+            resultDiv.innerHTML += log('=== 模块识别测试 ===', 'info');
+            
+            const descriptor = {
+                title: '突现词分析',
+                fields: [
+                    { fieldId: 'total_burst_terms', label: '突现词总数', type: 'number' },
+                    { fieldId: 'current_burst_terms', label: '当前突现词数量', type: 'number' },
+                    { fieldId: 'burst_1_term', label: '排名第1的突现词', type: 'text' },
+                    { fieldId: 'burst_1_strength', label: '排名第1的突现强度', type: 'number' },
+                    { fieldId: 'burst_1_start_year', label: '排名第1的开始年份', type: 'number' },
+                    { fieldId: 'burst_1_duration', label: '排名第1的持续年数', type: 'number' },
+                    { fieldId: 'burst_2_term', label: '排名第2的突现词', type: 'text' },
+                    { fieldId: 'burst_2_strength', label: '排名第2的突现强度', type: 'number' },
+                    { fieldId: 'burst_2_start_year', label: '排名第2的开始年份', type: 'number' },
+                    { fieldId: 'burst_2_duration', label: '排名第2的持续年数', type: 'number' },
+                    { fieldId: 'burst_3_term', label: '排名第3的突现词', type: 'text' },
+                    { fieldId: 'burst_3_strength', label: '排名第3的突现强度', type: 'number' },
+                    { fieldId: 'burst_3_start_year', label: '排名第3的开始年份', type: 'number' },
+                    { fieldId: 'burst_3_duration', label: '排名第3的持续年数', type: 'number' },
+                    { fieldId: 'burst_4_term', label: '排名第4的突现词', type: 'text' },
+                    { fieldId: 'burst_4_strength', label: '排名第4的突现强度', type: 'number' },
+                    { fieldId: 'burst_4_start_year', label: '排名第4的开始年份', type: 'number' },
+                    { fieldId: 'burst_4_duration', label: '排名第4的持续年数', type: 'number' },
+                    { fieldId: 'burst_5_term', label: '排名第5的突现词', type: 'text' },
+                    { fieldId: 'burst_5_strength', label: '排名第5的突现强度', type: 'number' },
+                    { fieldId: 'burst_5_start_year', label: '排名第5的开始年份', type: 'number' },
+                    { fieldId: 'burst_5_duration', label: '排名第5的持续年数', type: 'number' }
+                ]
+            };
+            
+            if (typeof getModuleNameFromDescriptor === 'function') {
+                const moduleName = getModuleNameFromDescriptor(descriptor);
+                resultDiv.innerHTML += log(`模块名称: ${moduleName}`, 'info');
+                
+                if (moduleName === 'burst-analysis') {
+                    resultDiv.innerHTML += log('✓ 模块识别正确', 'success');
+                } else {
+                    resultDiv.innerHTML += log(`✗ 模块识别错误，期望 burst-analysis，实际 ${moduleName}`, 'error');
+                }
+            } else {
+                resultDiv.innerHTML += log('✗ getModuleNameFromDescriptor 函数不可用', 'error');
+            }
+            
+            // 2. 测试提示词获取
+            resultDiv.innerHTML += log('=== 提示词获取测试 ===', 'info');
+            
+            if (typeof getModulePrompt === 'function') {
+                const prompt = getModulePrompt('burst-analysis');
+                if (prompt) {
+                    resultDiv.innerHTML += log('✓ 成功获取突现词分析模块提示词', 'success');
+                    resultDiv.innerHTML += log(`提示词长度: ${prompt.length} 字符`, 'info');
+                } else {
+                    resultDiv.innerHTML += log('✗ 未找到突现词分析模块提示词', 'error');
+                }
+            } else {
+                resultDiv.innerHTML += log('✗ getModulePrompt 函数不可用', 'error');
+            }
+            
+            // 3. 测试字段映射
+            resultDiv.innerHTML += log('=== 字段映射测试 ===', 'info');
+            
+            const expectedFields = [
+                'total_burst_terms', 'current_burst_terms',
+                'burst_1_term', 'burst_1_strength', 'burst_1_start_year', 'burst_1_duration',
+                'burst_2_term', 'burst_2_strength', 'burst_2_start_year', 'burst_2_duration',
+                'burst_3_term', 'burst_3_strength', 'burst_3_start_year', 'burst_3_duration',
+                'burst_4_term', 'burst_4_strength', 'burst_4_start_year', 'burst_4_duration',
+                'burst_5_term', 'burst_5_strength', 'burst_5_start_year', 'burst_5_duration'
+            ];
+            
+            const actualFields = descriptor.fields.map(f => f.fieldId);
+            const missingFields = expectedFields.filter(f => !actualFields.includes(f));
+            const extraFields = actualFields.filter(f => !expectedFields.includes(f));
+            
+            if (missingFields.length === 0 && extraFields.length === 0) {
+                resultDiv.innerHTML += log('✓ 字段映射完全匹配', 'success');
+            } else {
+                if (missingFields.length > 0) {
+                    resultDiv.innerHTML += log(`✗ 缺少字段: ${missingFields.join(', ')}`, 'error');
+                }
+                if (extraFields.length > 0) {
+                    resultDiv.innerHTML += log(`✗ 多余字段: ${extraFields.join(', ')}`, 'error');
+                }
+            }
+            
+            // 4. 模拟AI解析结果
+            resultDiv.innerHTML += log('=== 模拟AI解析结果 ===', 'info');
+            
+            const mockExtractedData = {
+                "total_burst_terms": 12,
+                "current_burst_terms": 3,
+                "burst_1_term": "engineering education",
+                "burst_1_strength": 3.70,
+                "burst_1_start_year": 2010,
+                "burst_1_duration": 9,
+                "burst_2_term": "beliefs",
+                "burst_2_strength": 2.94,
+                "burst_2_start_year": 2011,
+                "burst_2_duration": 9,
+                "burst_3_term": "learning by design",
+                "burst_3_strength": 4.42,
+                "burst_3_start_year": 2012,
+                "burst_3_duration": 6,
+                "burst_4_term": "design-based learning",
+                "burst_4_strength": 4.28,
+                "burst_4_start_year": 2012,
+                "burst_4_duration": 4,
+                "burst_5_term": "design education",
+                "burst_5_strength": 3.31,
+                "burst_5_start_year": 2013,
+                "burst_5_duration": 6
+            };
+            
+            resultDiv.innerHTML += log('模拟AI解析结果:', 'info');
+            resultDiv.innerHTML += JSON.stringify(mockExtractedData, null, 2);
+            
+            // 5. 测试字段匹配
+            resultDiv.innerHTML += log('=== 字段匹配测试 ===', 'info');
+            
+            const matchedFields = descriptor.fields.filter(f => mockExtractedData[f.fieldId] !== undefined);
+            resultDiv.innerHTML += log(`匹配字段数量: ${matchedFields.length}/${descriptor.fields.length}`, 'info');
+            
+            if (matchedFields.length === descriptor.fields.length) {
+                resultDiv.innerHTML += log('✓ 所有字段都匹配成功', 'success');
+            } else {
+                const unmatchedFields = descriptor.fields.filter(f => mockExtractedData[f.fieldId] === undefined);
+                resultDiv.innerHTML += log(`✗ 未匹配字段: ${unmatchedFields.map(f => f.fieldId).join(', ')}`, 'error');
+            }
+            
+            // 6. 显示匹配详情
+            resultDiv.innerHTML += log('=== 字段匹配详情 ===', 'info');
+            matchedFields.forEach(field => {
+                resultDiv.innerHTML += log(`${field.fieldId}: ${mockExtractedData[field.fieldId]}`, 'success');
+            });
+        }
+
+        function testFieldMapping() {
+            const resultDiv = document.getElementById('fieldMappingResult');
+            resultDiv.innerHTML = '';
+            
+            resultDiv.innerHTML += log('=== 字段映射验证 ===', 'info');
+            
+            // 检查模块信息
+            if (window.MODULE_INFO && window.MODULE_INFO['burst-analysis']) {
+                const moduleInfo = window.MODULE_INFO['burst-analysis'];
+                resultDiv.innerHTML += log(`模块名称: ${moduleInfo.name}`, 'info');
+                resultDiv.innerHTML += log(`模块描述: ${moduleInfo.description}`, 'info');
+                resultDiv.innerHTML += log(`字段数量: ${moduleInfo.fields.length}`, 'info');
+                
+                resultDiv.innerHTML += log('字段列表:', 'info');
+                moduleInfo.fields.forEach((field, index) => {
+                    resultDiv.innerHTML += log(`  ${index + 1}. ${field}`, 'info');
+                });
+            } else {
+                resultDiv.innerHTML += log('✗ 未找到突现词分析模块信息', 'error');
+            }
+        }
+
+        // 页面加载完成后自动运行字段映射测试
+        window.addEventListener('load', function() {
+            setTimeout(testFieldMapping, 1000);
+        });
+    </script>
+</body>
+</html>
